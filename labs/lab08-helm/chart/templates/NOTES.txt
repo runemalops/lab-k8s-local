@@ -1,0 +1,12 @@
+Release:   {{ .Release.Name }}
+Namespace: {{ .Values.namespace }}
+
+Servicios:
+  - {{ include "curso-web.fullname" . }}-web  ({{ .Values.web.replicaCount }} réplicas)
+  - {{ include "curso-web.fullname" . }}-api  ({{ .Values.api.replicaCount }} réplicas)
+
+Pruébalo:
+  kubectl port-forward -n {{ .Values.namespace }} svc/{{ include "curso-web.fullname" . }}-web 8080:{{ .Values.web.service.port }}
+{{- if .Values.ingress.enabled }}
+  curl -H "Host: {{ .Values.ingress.host }}" http://localhost:8080{{ .Values.ingress.paths.api }}
+{{- end }}

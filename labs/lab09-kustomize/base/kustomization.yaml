@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - deployment.yaml
+  - service.yaml
+# Etiqueta común del curso.
+# Nota de clase: en kustomize >= 5 'commonLabels' está deprecado y se usa 'labels'.
+labels:
+  - pairs:
+      app.kubernetes.io/part-of: curso-k8s
+    includeSelectors: false
+    includeTemplates: true

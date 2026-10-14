@@ -1,0 +1,12 @@
+# Overlay STAGING (ESQUELETO)
+# Uso:  kubectl apply -k overlays/staging
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespace.yaml     # el namespace debe existir: este archivo lo crea
+  - ../../base
+
+# TODO(1): namespace lab09-staging
+# TODO(2): etiqueta entorno: staging
+# TODO(3): 3 réplicas, env APP_ENV=staging y recursos mayores (deployment-patch.yaml)
+# TODO(4): imagen nginx con tag más reciente (images)

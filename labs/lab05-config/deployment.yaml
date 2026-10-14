@@ -1,0 +1,71 @@
+# Lab 05 — Deployment con config y secretos (ESQUELETO)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: curso-web
+  namespace: lab05
+  labels:
+    app.kubernetes.io/part-of: curso-k8s
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: curso-web
+  template:
+    metadata:
+      labels:
+        app: curso-web
+        app.kubernetes.io/part-of: curso-k8s
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.27
+          ports:
+            - containerPort: 80
+              name: http
+          envFrom:
+            # TODO(1): TODAS las claves del ConfigMap como variables de entorno
+            - configMapRef:
+                name: __CONFIGMAP_NAME__
+          env:
+            # TODO(2): una sola clave concreta del Secret como variable de entorno
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: __SECRET_NAME__
+                  key: username
+          volumeMounts:
+            # TODO(3): montar el ConfigMap como directorio completo en el
+            # docroot de nginx (sin subPath: así los cambios se propagan solos)
+            - name: config
+              mountPath: /usr/share/nginx/html
+            # TODO(4): montar el Secret como archivos
+            - name: secret
+              mountPath: /etc/app-secret
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: __CONFIGMAP_NAME__
+            items:
+              - key: index.html
+                path: index.html
+        - name: secret
+          secret:
+            secretName: __SECRET_NAME__
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: curso-web
+  namespace: lab05
+  labels:
+    app.kubernetes.io/part-of: curso-k8s
+spec:
+  type: ClusterIP
+  selector:
+    app: curso-web
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

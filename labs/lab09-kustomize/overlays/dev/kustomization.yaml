@@ -1,0 +1,24 @@
+# Overlay DEV (ESQUELETO)
+# Uso:  kubectl apply -k overlays/dev     ·     kustomize build overlays/dev
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespace.yaml     # el namespace debe existir: este archivo lo crea
+  - ../../base
+
+# TODO(1): namespace propio de este entorno (lab09-dev)
+# namespace: lab09-dev
+
+# TODO(2): etiqueta de entorno (kustomize >= 5 usa 'labels'; antes era 'commonLabels')
+# labels:
+#   - pairs:
+#       entorno: dev
+
+# TODO(3): 1 réplica + env APP_ENV=dev (patch sobre el base)
+# patches:
+#   - path: deployment-patch.yaml
+
+# TODO(4): imagen con tag de desarrollo
+# images:
+#   - name: nginx
+#     newTag: "1.27.0"

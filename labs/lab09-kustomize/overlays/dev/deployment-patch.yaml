@@ -1,0 +1,7 @@
+# Patch del overlay dev (ESQUELETO)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: curso-web
+spec:
+  replicas: 1

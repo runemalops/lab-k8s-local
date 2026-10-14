@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: curso-web
+  namespace: lab05
+  labels:
+    app.kubernetes.io/part-of: curso-k8s
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: curso-web
+  template:
+    metadata:
+      labels:
+        app: curso-web
+        app.kubernetes.io/part-of: curso-k8s
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.27
+          ports:
+            - containerPort: 80
+              name: http
+          envFrom:
+            - configMapRef:
+                name: curso-web-config
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: curso-web-secret
+                  key: username
+          volumeMounts:
+            - name: config
+              mountPath: /usr/share/nginx/html
+            - name: secret
+              mountPath: /etc/app-secret
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: curso-web-config
+            items:
+              - key: index.html
+                path: index.html
+        - name: secret
+          secret:
+            secretName: curso-web-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: curso-web
+  namespace: lab05
+  labels:
+    app.kubernetes.io/part-of: curso-k8s
+spec:
+  type: ClusterIP
+  selector:
+    app: curso-web
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

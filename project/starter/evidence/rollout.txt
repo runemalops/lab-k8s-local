@@ -1,0 +1,39 @@
+# Evidencia de rollout y rollback
+
+**Fecha:** ____________  **Equipo:** ____________
+
+## Rollout (cambio de versión)
+
+```bash
+# p.ej. kubectl set image deployment/web -n mi-app web=nginx:1.27.1
+```
+
+Salida de `kubectl rollout status`:
+
+```
+pega aquí la salida
+```
+
+## Historial
+
+```bash
+kubectl rollout history deployment/web -n mi-app
+```
+
+```
+pega aquí la salida
+```
+
+## Rollback
+
+```bash
+kubectl rollout undo deployment/web -n mi-app
+```
+
+```
+pega aquí la salida
+```
+
+## Conclusión (1 línea)
+
+>

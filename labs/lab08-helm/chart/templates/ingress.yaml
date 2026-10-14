@@ -1,0 +1,30 @@
+# TODO(1): renderiza este manifiesto SOLO si .Values.ingress.enabled es true
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "curso-web.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "curso-web.labels" . | nindent 4 }}
+spec:
+  # TODO(2): className desde values
+  ingressClassName: nginx
+  rules:
+    - host: curso-web.local
+      http:
+        paths:
+          # TODO(3): backends a los services del chart (web y api)
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: REEMPLAZA
+                port:
+                  number: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: REEMPLAZA
+                port:
+                  number: 80

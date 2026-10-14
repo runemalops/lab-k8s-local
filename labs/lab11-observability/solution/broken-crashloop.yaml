@@ -1,0 +1,30 @@
+# Pod ROTO a propósito: el comando termina y el kubelet reinicia en bucle.
+# Esperado: 0/1  CrashLoopBackOff  (RESTARTS creciendo)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: curso-web-roto
+  namespace: lab11
+  labels:
+    app: curso-web-roto
+    app.kubernetes.io/part-of: curso-k8s
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: curso-web-roto
+  template:
+    metadata:
+      labels:
+        app: curso-web-roto
+        app.kubernetes.io/part-of: curso-k8s
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.27
+          # Este es el fallo: el proceso termina inmediatamente.
+          command: ["/bin/sh", "-c"]
+          args: ["echo 'arrancando...'; exit 1"]
+          ports:
+            - containerPort: 80
+              name: http

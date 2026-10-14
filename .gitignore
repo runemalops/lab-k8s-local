@@ -1,0 +1,15 @@
+# Artefactos locales / temporales
+*.bak
+.DS_Store
+rendered.yaml
+/tmp/
+
+# No versionar credenciales ni kubeconfig
+kubeconfig
+*.kubeconfig
+secrets.yaml
+*.key
+
+# Dependencias de ejemplo
+node_modules/
+__pycache__/

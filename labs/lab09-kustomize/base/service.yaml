@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: curso-web
+  labels:
+    app: curso-web
+spec:
+  type: ClusterIP
+  selector:
+    app: curso-web
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

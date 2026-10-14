@@ -12,12 +12,12 @@
 | Plazo | Tarea | Estado |
 |---|---|---|
 | T-14 | Congelar repo del curso (rama `main`, tag `v1.0`) | ☐ |
-| T-14 | Verificar instalación en 2–3 equipos representativos (Windows/WSL2, macOS, Linux) | ☐ |
-| T-10 | Enviar **guía de instalación** al alumno (`04_estructura_estudiante.md` §2) | ☐ |
+| T-14 | Verificar instalación en 2–3 equipos representativos (Windows/WSL2, macOS, Linux) usando `setup/instalar.sh` + `setup/verificacion.sh` | ☐ |
+| T-10 | Enviar **guía de instalación** al alumno (`setup/instalacion-*.md` + `setup/install-*.{sh,ps1}`) | ☐ |
 | T-7 | Recoger respuestas del pre-test (arquitectura, YAML, Docker) y survey de hardware | ☐ |
-| T-5 | Preparar slides (1 por día), cheat-sheets impresas y cuentas de Git del aula | ☐ |
-| T-3 | Recordatorio de instalación + prueba de verificación (§4.4 de `01_plan`) | ☐ |
-| T-1 | Correr los 4 labs completos en la máquina demo; congelar versiones (kind, helm, imágenes) | ☐ |
+| T-5 | Preparar slides (`slides/`), cheat-sheets (`labs/lab03-kubectl/solution/cheatsheet.md`) e impresas y cuentas de Git del aula | ☐ |
+| T-3 | Recordario de instalación + prueba de verificación (`setup/verificacion.sh` y §4.4 de `01_plan`) | ☐ |
+| T-1 | Correr los 12 labs completos en la máquina demo; congelar versiones (kind, helm, imágenes) | ☐ |
 
 ### 1.2 Pre-test (enviar en T-7, 10 min)
 1. ¿Qué diferencia contenedor de una VM?
@@ -41,44 +41,57 @@
 
 ---
 
-## 2. Repositorio del curso (estructura)
+## 2. Repositorio del curso (estructura real)
 
 ```
 curso-k8s-local/
-├── README.md                     # índice y acceso a materiales
+├── README.md                       # índice general (enviar al alumno)
 ├── 01_plan_de_contenidos.md
 ├── 02_guia_de_contenidos_y_modulos.md
-├── 03_estructura_instructor.md   # este archivo
+├── 03_estructura_instructor.md     # este archivo
 ├── 04_estructura_estudiante.md
-├── slides/                       # 1 deck por día (d1..d4)
+├── slides/
+│   └── README.md                   # decks d1..d4 (los coloca el instructor)
 ├── labs/
-│   ├── lab01-containers/         # Dockerfile skeleton + solution/
-│   ├── lab02-kind/               # guía create/delete
-│   ├── lab03-kubectl/
-│   ├── lab04-first-deploy/       # deployment/service skeleton + solution/
-│   ├── lab05-config/
-│   ├── lab06-ingress/
-│   ├── lab07-rollout/
-│   ├── lab08-helm/               # chart base + solution/
-│   ├── lab09-kustomize/          # base/overlays + solution/
-│   ├── lab10-cicd/               # .github/workflows/ + solution/
-│   ├── lab11-observability/
-│   └── lab12-debug/              # manifiestos rotos a propósito
+│   ├── lab01-containers/           # README.md (alumno) + INSTRUCTOR.md + skeleton + solution/
+│   ├── lab02-kind/                 # kind-config.yaml + solution/
+│   ├── lab03-kubectl/              # cheatsheet.md + solution/cheatsheet.md
+│   ├── lab04-first-deploy/         # namespace/deployment/service + solution/
+│   ├── lab05-config/               # configmap/secret/deployment + solution/
+│   ├── lab06-ingress/              # install-ingress.sh + apps/ingress + solution/
+│   ├── lab07-rollout/              # deployment con resources/probes + solution/
+│   ├── lab08-helm/                 # chart/ (esqueleto) + solution/curso-web/
+│   ├── lab09-kustomize/            # base/ + overlays/ + solution/
+│   ├── lab10-cicd/                 # ci.sh (fallback local) + .github/workflows/ + manifests/
+│   ├── lab11-observability/        # healthy + broken-crashloop + guia-diagnostico
+│   └── lab12-debug/                # broken/ (4 fallos) + rbac.yaml + solution/fixed/
 ├── project/
-│   ├── SPEC.md                   # rúbrica y requisitos
-│   └── starter/                  # repo base para alumnos
+│   ├── SPEC.md                     # requisitos y rúbrica (40 pts)
+│   └── starter/                    # repo base para alumnos
 ├── setup/
+│   ├── instalar.sh                 # dispatcher (detecta SO)
+│   ├── install-linux.sh
+│   ├── install-macos.sh
+│   ├── install-windows.ps1
 │   ├── instalacion-linux.md
 │   ├── instalacion-macos.md
 │   ├── instalacion-windows-wsl2.md
-│   ├── verificacion.sh           # script de autocomprobación
+│   ├── configuracion-inicial.md    # guía post-instalación (enviar junto con la instalación)
+│   ├── verificacion.sh             # script de autocomprobación
 │   └── troubleshooting-setup.md
-└── solutions/                    # SOLO instructor (rama protegida o repo privado)
-    ├── day1/ day2/ day3/ day4/
-    └── project-reference/
+└── solutions/                      # OPCIONAL: copia del material del instructor
+    └── (las soluciones viven en labs/*/solution/)
 ```
 
-**Regla:** los alumnos solo ven `main` sin `solutions/` (carpeta en repo privado o eliminada del fork).
+**Cómo se usa cada lab:**
+- `README.md` → guía del alumno (paso a paso, entregable, errores comunes).
+- `INSTRUCTOR.md` → tiempos, demo clave, errores esperados del aula, checklist de
+  entregable y **cuándo** liberar `solution/`.
+- `solution/` → respuesta de referencia. **Regla:** no se abre antes de 15 min de
+  esfuerzo del alumno ni antes de que ≥70 % del aula avance.
+
+**Regla de entrega:** al alumno se entrega `main` **sin** carpetas `solution/`
+(filtrar en el fork o mantener un repo privado del instructor).
 
 ---
 

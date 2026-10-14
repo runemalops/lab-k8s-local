@@ -1,0 +1,50 @@
+# Valores por defecto del chart curso-web (ESQUELETO)
+# Completa lo marcado con TODO
+
+web:
+  replicaCount: 2          # TODO(1): parametriza este número en el template
+  image:
+    repository: nginx
+    tag: "1.27.0"
+    pullPolicy: IfNotPresent
+  service:
+    port: 80
+    targetPort: 80
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+  env: {}                  # TODO(2): añade APP_ENV en values-dev/staging
+
+api:
+  replicaCount: 1
+  image:
+    repository: hashicorp/http-echo
+    tag: "1.0"
+    pullPolicy: IfNotPresent
+  args:
+    - "-text=API v1 OK"
+    - "-listen=:5678"
+  service:
+    port: 80
+    targetPort: 5678
+  resources:
+    requests:
+      cpu: 20m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
+
+ingress:
+  enabled: true            # TODO(3): haz que el Ingress respete este flag
+  className: nginx
+  host: curso-web.local
+  paths:
+    web: /
+    api: /api
+
+namespace: default

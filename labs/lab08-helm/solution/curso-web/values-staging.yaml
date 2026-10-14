@@ -1,0 +1,14 @@
+# Entorno STAGING: más réplicas e Ingress activo
+env: staging
+namespace: lab08
+web:
+  replicaCount: 3
+  image:
+    tag: "1.27.1"
+  env:
+    APP_ENV: staging
+api:
+  replicaCount: 2
+ingress:
+  enabled: true
+  host: staging.curso-web.local

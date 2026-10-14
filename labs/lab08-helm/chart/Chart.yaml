@@ -1,0 +1,9 @@
+apiVersion: v2
+name: curso-web
+description: Chart del curso K8s local - app de 2 servicios (web + api) con Ingress opcional
+type: application
+version: 0.1.0
+appVersion: "1.27.0"
+keywords:
+  - curso
+  - kubernetes-local

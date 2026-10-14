@@ -1,0 +1,88 @@
+# Lab 06 — App de dos servicios (ESQUELETO: completa los TODO)
+# web: nginx   ·   api: hashicorp/http-echo (responde texto plano)
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namespace: lab06
+  labels:
+    app: web
+    app.kubernetes.io/part-of: curso-k8s
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+        app.kubernetes.io/part-of: curso-k8s
+    spec:
+      containers:
+        - name: web
+          image: __WEB_IMAGE__          # TODO(1): nginx con tag explícito
+          ports:
+            - containerPort: 80
+              name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+  namespace: lab06
+  labels:
+    app.kubernetes.io/part-of: curso-k8s
+spec:
+  type: ClusterIP
+  selector:
+    app: web
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: lab06
+  labels:
+    app: api
+    app.kubernetes.io/part-of: curso-k8s
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+        app.kubernetes.io/part-of: curso-k8s
+    spec:
+      containers:
+        - name: api
+          # TODO(2): imagen hashicorp/http-echo con tag explícito
+          image: __API_IMAGE__
+          args: ["-text=API v1 OK", "-listen=:5678"]
+          ports:
+            - containerPort: 5678
+              name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+  namespace: lab06
+  labels:
+    app.kubernetes.io/part-of: curso-k8s
+spec:
+  type: ClusterIP
+  selector:
+    app: api
+  ports:
+    - name: http
+      port: 80
+      targetPort: http        # TODO(3): nombre del puerto del contenedor (5678)

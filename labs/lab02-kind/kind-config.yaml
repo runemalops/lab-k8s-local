@@ -1,0 +1,14 @@
+# Configuración del clúster del curso (kind) — ESQUELETO
+# Uso:  kind create cluster --name curso-k8s --config kind-config.yaml
+#
+# TODOs para completar:
+#   1) Añade un segundo nodo con rol "worker".
+#   2) Expón los puertos 80 y 443 del control-plane en tu equipo (extraPortMappings)
+#      para poder probar Ingress en el lab06 con http://localhost.
+#   3) Añade la label "ingress-ready=true" al nodo control-plane (kubeadmConfigPatches).
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    # TODO(2): extraPortMappings -> containerPort 80 y 443 hacia el host
+    # TODO(3): kubeadmConfigPatches -> node-labels "ingress-ready=true"

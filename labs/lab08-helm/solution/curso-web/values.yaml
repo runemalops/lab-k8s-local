@@ -1,0 +1,52 @@
+# Valores por defecto del chart curso-web
+# Se pueden sobreescribir con --set o con -f values-<entorno>.yaml
+
+web:
+  replicaCount: 2
+  image:
+    repository: nginx
+    tag: "1.27.0"
+    pullPolicy: IfNotPresent
+  service:
+    port: 80
+    targetPort: 80
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+  env: {}
+
+api:
+  replicaCount: 1
+  image:
+    repository: hashicorp/http-echo
+    tag: "1.0"
+    pullPolicy: IfNotPresent
+  args:
+    - "-text=API v1 OK"
+    - "-listen=:5678"
+  service:
+    port: 80
+    targetPort: 5678
+  resources:
+    requests:
+      cpu: 20m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
+
+ingress:
+  enabled: true
+  className: nginx
+  # Host propio de este chart: en nginx-ingress el par host+path debe ser único
+  # en todo el clúster (por eso no reutilizamos app.local del lab06).
+  host: curso-web.local
+  paths:
+    web: /
+    api: /api
+
+namespace: default

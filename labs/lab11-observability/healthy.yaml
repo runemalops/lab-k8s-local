@@ -1,0 +1,26 @@
+# Pod SANO: tu referencia para comparar
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: curso-web
+  namespace: lab11
+  labels:
+    app: curso-web
+    app.kubernetes.io/part-of: curso-k8s
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: curso-web
+  template:
+    metadata:
+      labels:
+        app: curso-web
+        app.kubernetes.io/part-of: curso-k8s
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.27
+          ports:
+            - containerPort: 80
+              name: http

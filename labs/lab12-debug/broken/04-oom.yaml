@@ -1,0 +1,23 @@
+# CASO 4 — roto a propósito. Síntoma esperado: OOMKilled / CrashLoopBackOff
+# Pista: nginx necesita más memoria de la que se le permite.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fallo4
+  namespace: lab12
+  labels:
+    app: fallo4
+    app.kubernetes.io/part-of: curso-k8s
+spec:
+  containers:
+    - name: web
+      image: nginx:1.27
+      ports:
+        - containerPort: 80
+      resources:
+        requests:
+          cpu: 50m
+          memory: 16Mi
+        limits:
+          cpu: 200m
+          memory: 16Mi     # <-- demasiado bajo: el kernel mata el contenedor

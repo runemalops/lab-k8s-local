@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "curso-web.fullname" . }}-web
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "curso-web.labels" . | nindent 4 }}
+    app: web
+spec:
+  replicas: {{ .Values.web.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "curso-web.selectorLabels" . | nindent 6 }}
+      app: web
+  template:
+    metadata:
+      labels:
+        {{- include "curso-web.selectorLabels" . | nindent 8 }}
+        app: web
+        app.kubernetes.io/part-of: curso-k8s
+    spec:
+      containers:
+        - name: web
+          image: "{{ .Values.web.image.repository }}:{{ .Values.web.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.web.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.web.service.targetPort }}
+          {{- with .Values.web.env }}
+          env:
+            {{- range $k, $v := . }}
+            - name: {{ $k }}
+              value: {{ $v | quote }}
+            {{- end }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.web.resources | nindent 12 }}

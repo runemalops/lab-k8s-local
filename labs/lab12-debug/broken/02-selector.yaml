@@ -1,0 +1,43 @@
+# CASO 2 — roto a propósito. Síntoma esperado: Service SIN endpoints
+# Pista: compara Service.spec.selector con los labels del pod.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fallo2
+  namespace: lab12
+  labels:
+    app: curso-web
+    app.kubernetes.io/part-of: curso-k8s
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fallo2
+  template:
+    metadata:
+      labels:
+        app: fallo2
+        app.kubernetes.io/part-of: curso-k8s
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.27
+          ports:
+            - containerPort: 80
+              name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fallo2
+  namespace: lab12
+  labels:
+    app.kubernetes.io/part-of: curso-k8s
+spec:
+  type: ClusterIP
+  selector:
+    app: curso-web          # <-- este label NO existe en los pods
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

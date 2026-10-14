@@ -1,0 +1,53 @@
+# Lab 07 — Ciclo de vida del despliegue (ESQUELETO)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: curso-web
+  namespace: lab07
+  labels:
+    app.kubernetes.io/part-of: curso-k8s
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: curso-web
+  template:
+    metadata:
+      labels:
+        app: curso-web
+        app.kubernetes.io/part-of: curso-k8s
+    spec:
+      containers:
+        - name: web
+          # TODO(4): tag inicial de nginx (usa la versión más baja de la serie 1.27.x)
+          image: nginx:1.27.0
+          ports:
+            - containerPort: 80
+              name: http
+          # TODO(1): requests y limits (cpu y memoria)
+          resources:
+            requests:
+              cpu: __CPU_REQ__
+              memory: __MEM_REQ__
+            limits:
+              cpu: __CPU_LIM__
+              memory: __MEM_LIM__
+          # TODO(2): readiness: ¿puede recibir tráfico?
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: __RD_DELAY__
+            periodSeconds: 5
+          # TODO(3): liveness: ¿sigue vivo?
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: __LS_DELAY__
+            periodSeconds: 10

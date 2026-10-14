@@ -1,0 +1,32 @@
+# Lab 06 — Ingress (ESQUELETO: completa los TODO)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: curso-web
+  namespace: lab06
+  labels:
+    app.kubernetes.io/part-of: curso-k8s
+spec:
+  # TODO(1): clase del controlador instalado (ingress-nginx en kind)
+  ingressClassName: __INGRESS_CLASS__
+  rules:
+    - host: app.local
+      http:
+        paths:
+          # El orden importa: /api antes que /
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                # TODO(2): nombre del Service de la api y su puerto
+                name: __API_SVC__
+                port:
+                  number: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                # TODO(3): nombre del Service web y su puerto
+                name: __WEB_SVC__
+                port:
+                  number: 80

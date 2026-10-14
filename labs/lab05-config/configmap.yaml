@@ -1,0 +1,24 @@
+# Lab 05 — ConfigMap (ESQUELETO: completa los TODO)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: curso-web-config
+  namespace: lab05
+  labels:
+    app.kubernetes.io/part-of: curso-k8s
+data:
+  # TODO(1): variables simples (texto plano)
+  APP_ENV: __APP_ENV__            # p.ej. dev
+  GREETING: __GREETING__          # p.ej. Hola desde el ConfigMap
+
+  # TODO(2): un archivo completo como clave del ConfigMap
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="es">
+      <head><meta charset="utf-8"><title>curso-web</title></head>
+      <body>
+        <h1>__GREETING__</h1>
+        <p>Entorno: <strong>__APP_ENV__</strong></p>
+        <p>Esto viene de un ConfigMap montado como archivo.</p>
+      </body>
+    </html>

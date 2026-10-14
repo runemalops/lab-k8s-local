@@ -1,0 +1,18 @@
+# Lab 04 — Service (ESQUELETO: completa los TODO)
+apiVersion: v1
+kind: Service
+metadata:
+  name: curso-web
+  namespace: lab04
+  labels:
+    app.kubernetes.io/part-of: curso-k8s
+spec:
+  type: ClusterIP
+  # TODO(1): selector que apunte a los pods del Deployment
+  selector:
+    app: __APP_LABEL__
+  ports:
+    - name: http
+      # TODO(2): puerto expuesto POR EL SERVICIO dentro del clúster
+      port: __PORT__
+      targetPort: http            # nombre del puerto del contenedor

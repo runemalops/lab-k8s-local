@@ -1,0 +1,42 @@
+# TODO: copia aquí el pipeline del lab10 y ajústalo a esta estructura.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  KUSTOMIZE_DIR: deploy
+  NS: mi-app
+
+jobs:
+  validate:
+    name: Validar manifiestos
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Kustomize build
+        run: kubectl kustomize "$KUSTOMIZE_DIR" > rendered.yaml
+      - name: Dry-run
+        run: kubectl apply --dry-run=client -f rendered.yaml
+      # TODO: kubeconform
+
+  deploy:
+    name: Desplegar a kind
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - uses: actions/checkout@v4
+      - name: Crear clúster kind
+        uses: helm/kind-action@v1.10.0
+        with:
+          cluster_name: curso-k8s
+      - name: Renderizar y aplicar
+        run: |
+          kubectl kustomize "$KUSTOMIZE_DIR" > rendered.yaml
+          kubectl apply -f rendered.yaml
+      - name: Comprobar rollout
+        run: |
+          kubectl rollout status deployment/web -n "$NS" --timeout=180s
+          kubectl get pods -n "$NS"

@@ -1,0 +1,18 @@
+# Patch del overlay staging (ESQUELETO)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: curso-web
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+        - name: web
+          resources:
+            requests:
+              cpu: __CPU_REQ__
+              memory: __MEM_REQ__
+            limits:
+              cpu: __CPU_LIM__
+              memory: __MEM_LIM__

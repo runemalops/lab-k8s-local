@@ -1,0 +1,29 @@
+# Lab 04 — Deployment (ESQUELETO: completa los TODO)
+# Regla 3 del laboratorio: etiqueta  app.kubernetes.io/part-of: curso-k8s
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: curso-web
+  namespace: lab04                # ¡sin esto cae en "default"!
+  labels:
+    app.kubernetes.io/part-of: curso-k8s
+spec:
+  replicas: __REPLICAS__          # TODO(1): 2 réplicas
+  selector:
+    matchLabels:
+      # TODO(2): debe coincidir EXACTAMENTE con labels del template
+      app: __APP_LABEL__
+  template:
+    metadata:
+      labels:
+        # TODO(3): misma etiqueta que arriba + part-of
+        app: __APP_LABEL__
+        app.kubernetes.io/part-of: curso-k8s
+    spec:
+      containers:
+        - name: web
+          # TODO(4): imagen con TAG EXPLÍCITO (pista: nginx)
+          image: __IMAGE__
+          ports:
+            - containerPort: 80
+              name: http

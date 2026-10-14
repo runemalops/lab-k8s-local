@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "curso-web.fullname" . }}-web
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "curso-web.labels" . | nindent 4 }}
+    app: web
+spec:
+  # TODO(1): sustituye el 1 por el valor de values.yaml
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "curso-web.selectorLabels" . | nindent 6 }}
+      app: web
+  template:
+    metadata:
+      labels:
+        {{- include "curso-web.selectorLabels" . | nindent 8 }}
+        app: web
+        app.kubernetes.io/part-of: curso-k8s
+    spec:
+      containers:
+        - name: web
+          # TODO(2): compón la imagen desde values (repository:tag)
+          image: nginx:1.27.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+          # TODO(3): renderiza las env de values.web.env con un range
+          # resources:
+          #   ... (cópialos del patrón de solution/)

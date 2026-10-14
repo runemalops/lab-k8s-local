@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "curso-web.fullname" . }}-api
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "curso-web.labels" . | nindent 4 }}
+    app: api
+spec:
+  # TODO(1): replicas desde .Values.api.replicaCount
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "curso-web.selectorLabels" . | nindent 6 }}
+      app: api
+  template:
+    metadata:
+      labels:
+        {{- include "curso-web.selectorLabels" . | nindent 8 }}
+        app: api
+        app.kubernetes.io/part-of: curso-k8s
+    spec:
+      containers:
+        - name: api
+          # TODO(2): imagen y args desde values.api
+          image: hashicorp/http-echo:1.0
+          args:
+            - "-text=API v1 OK"
+            - "-listen=:5678"
+          ports:
+            - name: http
+              containerPort: 5678
+          # TODO(3): resources desde values.api.resources

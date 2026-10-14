@@ -1,0 +1,13 @@
+# Artefactos locales
+rendered.yaml
+/tmp/
+*.bak
+.DS_Store
+
+# Evidencias grandes (mejor enlazar o comprimir)
+*.tar
+*.tar.gz
+
+# Secrets
+*.key
+secrets.yaml

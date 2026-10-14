@@ -16,13 +16,22 @@
 ## 2. Instalación previa (una semana antes)
 
 ### 2.1 Instala por tu sistema
-| SO | Guía | Notas clave |
-|---|---|---|
-| Linux | `setup/instalacion-linux.md` | Docker Engine + kind + kubectl + helm |
-| macOS | `setup/instalacion-macos.md` | Docker Desktop / OrbStack / colima |
-| Windows | `setup/instalacion-windows-wsl2.md` | **WSL2 + Ubuntu obligatorio**; trabajar siempre dentro de WSL2 |
 
-### 2.2 Verificación (ejecuta y guarda la salida)
+| SO | Guía | Script automático |
+|---|---|---|
+| Linux | `setup/instalacion-linux.md` | `bash setup/install-linux.sh` |
+| macOS | `setup/instalacion-macos.md` | `bash setup/install-macos.sh` |
+| Windows | `setup/instalacion-windows-wsl2.md` | `.\setup\install-windows.ps1` (PowerShell **como administrador**) |
+
+Atajo: `bash setup/instalar.sh` detecta tu sistema y lanza el instalador correcto.
+El instalador pone las versiones congeladas del curso: **kind v0.24.0 · kubectl v1.31.4 · Helm v3.16.4**.
+
+### 2.2 Configuración inicial
+
+Sigue `setup/configuracion-inicial.md`: PATH y alias, Git, editor, primer clúster
+`curso-k8s`, entrada `app.local` en `/etc/hosts` y checklist previo al Día 1.
+
+### 2.3 Verificación (ejecuta y guarda la salida)
 
 ```bash
 bash setup/verificacion.sh
@@ -35,10 +44,14 @@ Salida esperada (todas en verde):
 [OK] kubectl
 [OK] helm
 [OK] git
+[OK] kustomize (embebido en kubectl)
+[OK] daemon Docker respondiendo
 [OK] cluster temporal creado y borrado
 ```
 
-### 2.3 Requisitos de equipo
+Si algo falla → `setup/troubleshooting-setup.md` y avisa al instructor **antes** del Día 1.
+
+### 2.4 Requisitos de equipo
 - 8 GB RAM (16 recomendados), 4 cores, 10 GB de disco libre, virtualización habilitada.
 - Si tu equipo no cumple: avisa en T-5 para asignarte pareja o alternativa con minikube.
 
@@ -57,6 +70,20 @@ Salida esperada (todas en verde):
 - **Antes de clase (30 min):** leer el resumen del módulo en `02_guia_de_contenidos_y_modulos.md`.
 - **Durante:** toma notas de errores y soluciones (será tu cheat-sheet).
 - **Después (1–2 h):** repetir el lab sin seguir la guía y subir el entregable al repo.
+
+### Cómo usar las carpetas de cada lab
+
+```
+labs/labNN-nombre/
+├── README.md      # tu guía: objetivo, pasos, entregable y errores comunes
+├── INSTRUCTOR.md  # NO la leas: es el playbook del docente (incluye soluciones)
+├── *.yaml         # esqueletos para completar (contienen TODOs)
+└── solution/      # NO la abras antes de intentarlo: es la respuesta
+```
+
+Labs del curso: `lab01-containers` · `lab02-kind` · `lab03-kubectl` · `lab04-first-deploy` ·
+`lab05-config` · `lab06-ingress` · `lab07-rollout` · `lab08-helm` · `lab09-kustomize` ·
+`lab10-cicd` · `lab11-observability` · `lab12-debug`.
 
 ---
 

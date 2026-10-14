@@ -1,0 +1,21 @@
+Release:   {{ .Release.Name }}
+Namespace: {{ .Values.namespace }}
+Entorno:   {{ .Values.env | default "default" }}
+
+Servicios desplegados:
+  - {{ include "curso-web.fullname" . }}-web  ({{ .Values.web.replicaCount }} réplicas, imagen {{ .Values.web.image.repository }}:{{ .Values.web.image.tag }})
+  - {{ include "curso-web.fullname" . }}-api  ({{ .Values.api.replicaCount }} réplicas)
+
+{{- if .Values.ingress.enabled }}
+
+Pruébalo:
+  kubectl port-forward -n {{ .Values.namespace }} svc/{{ include "curso-web.fullname" . }}-web 8080:{{ .Values.web.service.port }}
+  curl -H "Host: {{ .Values.ingress.host }}" http://localhost:8080{{ .Values.ingress.paths.api }}
+{{- else }}
+
+Sin Ingress habilitado. Prueba con port-forward:
+  kubectl port-forward -n {{ .Values.namespace }} svc/{{ include "curso-web.fullname" . }}-web 8080:{{ .Values.web.service.port }}
+{{- end }}
+
+Desinstalar:
+  helm uninstall {{ .Release.Name }} -n {{ .Values.namespace }}
