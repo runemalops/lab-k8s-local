@@ -1,6 +1,6 @@
 # Lab 04 · Primer deployment declarativo
 
-**Módulo:** M05 · **Día:** 1 · **Duración:** 70 min (bloque de 2 h con teoría)
+**Módulo:** M05 · **Día:** 1 · **Duración en aula:** 30 min (incluye la práctica de kubectl del M04)
 **Guía:** alumno · **Carpeta:** `labs/lab04-first-deploy/`
 
 ---

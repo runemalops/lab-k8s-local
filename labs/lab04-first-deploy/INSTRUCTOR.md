@@ -1,6 +1,6 @@
 # Guía del instructor · Lab 04 (M05)
 
-**Duración:** 70 min de lab (30 min de teoría antes) · **Carpeta:** `labs/lab04-first-deploy/`
+**Duración:** 30 min de lab en el bloque D1 (teoría M05 10 min antes) · **Carpeta:** `labs/lab04-first-deploy/`
 **Mensaje del bloque:** *"si no está en el YAML, no existe."*
 
 ---

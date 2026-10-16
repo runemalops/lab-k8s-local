@@ -1,22 +1,30 @@
 # Curso: Introducción a Kubernetes como herramienta de Deployment (entorno local)
 
-Curso de **4 días** de nivel básico para estudiantes de ingeniería y developers. Todo el laboratorio corre en **equipos locales** (kind + Docker), sin costo de nube.
+Curso de **5 días × 2 h (10 h)** de nivel básico para estudiantes de ingeniería y developers. Todo el laboratorio corre en **equipos locales** (kind + Docker), sin costo de nube.
+
+> Formato comprimido: la clase es teoría esencial + práctica guiada. Las extensiones
+> (kubectl a fondo, Kustomize, probes/OOMKilled, plantillas Helm avanzadas, casos extra de
+> debugging) quedan como **material asíncrono**.
 
 ## Documentos del curso
 
 | Archivo | Audiencia | Contenido |
 |---|---|---|
-| [01_plan_de_contenidos.md](01_plan_de_contenidos.md) | Instructor + estudiante | Ficha técnica, objetivos, prerrequisitos, 16 módulos, programa día a día, proyecto final y evaluación |
+| [01_plan_de_contenidos.md](01_plan_de_contenidos.md) | Instructor + estudiante | Ficha técnica, objetivos, prerrequisitos, 16 módulos, programa de 5 días × 2 h, proyecto final y evaluación |
 | [02_guia_de_contenidos_y_modulos.md](02_guia_de_contenidos_y_modulos.md) | Instructor + estudiante | Detalle de cada módulo (teoría, lab, entregable, errores comunes) |
 | [03_estructura_instructor.md](03_estructura_instructor.md) | Instructor | Preparación previa, repo del curso, rutina diaria, evaluación, kit de emergencia |
 | [04_estructura_estudiante.md](04_estructura_estudiante.md) | Estudiante | Instalación, reglas del lab, entregables, troubleshooting y continuidad |
 
-## Resumen del programa
+## Resumen del programa (5 días × 2 h)
 
 - **Día 1:** contenedores → arquitectura K8s → clúster local con kind → primer deployment declarativo
 - **Día 2:** K8s como herramienta de deployment: config/secrets, Ingress, rollout y rollback
-- **Día 3:** Helm, Kustomize multi-entorno y pipeline CI/CD que despliega al clúster
-- **Día 4:** observabilidad, debugging, seguridad básica, de local a producción y proyecto final
+- **Día 3:** empaquetado de despliegues con Helm (values dev/staging)
+- **Día 4:** pipeline CI/CD que despliega + diagnóstico de despliegues fallidos
+- **Día 5:** seguridad (RBAC), de local a producción y proyecto final
+
+**Asíncrono (opcional):** `lab03-kubectl`, `lab09-kustomize`, extensión de `lab07-rollout`,
+plantillas avanzadas de Helm y casos 3–4 de `lab12-debug`.
 
 ---
 
@@ -47,20 +55,20 @@ Cada laboratorio incluye **guía del alumno** (`README.md`), **guía del instruc
 (`INSTRUCTOR.md`), esqueletos para completar y la carpeta `solution/` (reservada al
 instructor hasta que el aula avance).
 
-| Lab | Módulo | Día | Tema |
-|---|---|---|---|
-| [lab01-containers](labs/lab01-containers/) | M01 | 1 | Contenedores, imágenes y artefactos de deployment |
-| [lab02-kind](labs/lab02-kind/) | M03 | 1 | Clúster local con kind (create/delete/contextos) |
-| [lab03-kubectl](labs/lab03-kubectl/) | M04 | 1 | kubectl: observar, inspeccionar y modificar |
-| [lab04-first-deploy](labs/lab04-first-deploy/) | M05 | 1 | Primer deployment declarativo (Namespace/Deployment/Service) |
-| [lab05-config](labs/lab05-config/) | M07 | 2 | Configuración y secretos (ConfigMap/Secret) |
-| [lab06-ingress](labs/lab06-ingress/) | M08 | 2 | Exposición: Service, DNS e Ingress |
-| [lab07-rollout](labs/lab07-rollout/) | M09 | 2 | Ciclo de vida: recursos, rollout y rollback |
-| [lab08-helm](labs/lab08-helm/) | M10 | 3 | Helm: charts, values, upgrade y rollback |
-| [lab09-kustomize](labs/lab09-kustomize/) | M11 | 3 | Kustomize: base + overlays dev/staging |
-| [lab10-cicd](labs/lab10-cicd/) | M12 | 3 | CI/CD: pipeline que valida, despliega y comprueba |
-| [lab11-observability](labs/lab11-observability/) | M13 | 4 | Observabilidad y árbol de decisión de diagnóstico |
-| [lab12-debug](labs/lab12-debug/) | M14 | 4 | Debugging de 4 despliegues rotos + RBAC mínimo |
+| Lab | Módulo | Día | Modalidad | Tema |
+|---|---|---|---|---|
+| [lab01-containers](labs/lab01-containers/) | M01 | 1 | Aula | Contenedores, imágenes y artefactos de deployment |
+| [lab02-kind](labs/lab02-kind/) | M03 | 1 | Aula | Clúster local con kind (create/delete/contextos) |
+| [lab03-kubectl](labs/lab03-kubectl/) | M04 | 1 | Asíncrono | kubectl: observar, inspeccionar y modificar |
+| [lab04-first-deploy](labs/lab04-first-deploy/) | M05 | 1 | Aula | Primer deployment declarativo (Namespace/Deployment/Service) |
+| [lab05-config](labs/lab05-config/) | M07 | 2 | Aula | Configuración y secretos (ConfigMap/Secret) |
+| [lab06-ingress](labs/lab06-ingress/) | M08 | 2 | Aula | Exposición: Service, DNS e Ingress |
+| [lab07-rollout](labs/lab07-rollout/) | M09 | 2 | Aula (express) | Ciclo de vida: recursos, rollout y rollback |
+| [lab08-helm](labs/lab08-helm/) | M10 | 3 | Aula | Helm: charts, values, upgrade y rollback |
+| [lab09-kustomize](labs/lab09-kustomize/) | M11 | 3 | Asíncrono | Kustomize: base + overlays dev/staging |
+| [lab10-cicd](labs/lab10-cicd/) | M12 | 4 | Aula | CI/CD: pipeline que valida, despliega y comprueba |
+| [lab11-observability](labs/lab11-observability/) | M13 | 4 | Aula | Observabilidad y árbol de decisión de diagnóstico |
+| [lab12-debug](labs/lab12-debug/) | M14 | 5 | Aula (casos 1–2) | Debugging de 4 despliegues rotos + RBAC mínimo |
 
 ## Proyecto final
 

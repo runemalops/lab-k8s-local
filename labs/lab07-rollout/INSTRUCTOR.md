@@ -1,6 +1,6 @@
 # Guía del instructor · Lab 07 (M09)
 
-**Duración:** 60 min de lab (45 min de teoría antes) · **Carpeta:** `labs/lab07-rollout/`
+**Duración:** 10 min *express* en aula (Día 2: rollout a v1.27.1 → fallo con `nginx:1.27.999` → `rollout undo`) + lab completo (60 min, probes y OOMKilled) **ASÍNCRONO** · **Carpeta:** `labs/lab07-rollout/`
 **Mensaje del bloque:** *"un deployment es un proceso, no un comando."*
 
 ---

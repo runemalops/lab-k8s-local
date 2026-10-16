@@ -1,6 +1,6 @@
 # Lab 09 · Kustomize y multi-entorno
 
-**Módulo:** M11 · **Día:** 3 · **Duración:** 45 min (bloque de 1.5 h con teoría)
+**Módulo:** M11 · **Día:** 3 · **Duración:** 45 min · **Modalidad: ASÍNCRONO** (opcional; en aula solo la comparación Helm vs Kustomize)
 **Guía:** alumno · **Carpeta:** `labs/lab09-kustomize/`
 
 ---

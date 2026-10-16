@@ -1,6 +1,6 @@
 # Lab 05 · Configuración y secretos
 
-**Módulo:** M07 · **Día:** 2 · **Duración:** 45 min (bloque de 1.5 h con teoría)
+**Módulo:** M07 · **Día:** 2 · **Duración en aula:** 30 min (bloque D2 de 2 h)
 **Guía:** alumno · **Carpeta:** `labs/lab05-config/`
 
 ---

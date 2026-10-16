@@ -1,6 +1,6 @@
 # Guía del instructor · Lab 09 (M11)
 
-**Duración:** 45 min de lab (35 min de teoría antes) · **Carpeta:** `labs/lab09-kustomize/`
+**Duración:** 45 min · **Modalidad: ASÍNCRONO** (ampliación opcional; en aula solo la comparación Helm vs Kustomize en el cierre del Día 3) · **Carpeta:** `labs/lab09-kustomize/`
 **Mensaje del bloque:** *"base + overlays: configurar sin duplicar."*
 
 ---

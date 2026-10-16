@@ -1,9 +1,9 @@
 # Guía del instructor · Lab 01 (M01)
 
-**Duración:** 25–30 min de lab dentro del bloque de 1 h · **Formato:** teoría 35 min + lab 25 min
+**Duración:** 15 min de lab en el bloque D1 · **Formato:** teoría M01+M02 25 min + lab 15 min
 **Carpeta:** `labs/lab01-containers/` (esqueleto) · `solution/` (respuesta)
 
-> Regla de aula: **no entregar el Dockerfile resuelto antes de 15 min de esfuerzo.**
+> Regla de aula: **no entregar el Dockerfile resuelto antes de 5 min de esfuerzo** (formato 2 h).
 
 ---
 

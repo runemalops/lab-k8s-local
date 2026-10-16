@@ -1,6 +1,6 @@
 # Guía del instructor · Lab 03 (M04)
 
-**Duración:** 50 min de lab (teoría 35 min antes) · **Carpeta:** `labs/lab03-kubectl/`
+**Duración:** 50 min · **Modalidad: ASÍNCRONO** (ampliación opcional; la teoría de kubectl va en aula dentro de M05 y se practica en el lab04) · **Carpeta:** `labs/lab03-kubectl/`
 
 ---
 

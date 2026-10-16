@@ -1,6 +1,6 @@
 # Guía del instructor · Lab 05 (M07)
 
-**Duración:** 45 min de lab (40 min de teoría antes) · **Carpeta:** `labs/lab05-config/`
+**Duración:** 30 min de lab (Día 2; teoría M06+M07 25 min antes) · **Carpeta:** `labs/lab05-config/`
 **Mensaje del bloque:** *"la imagen es inmutable; la configuración no."*
 
 ---
@@ -72,4 +72,4 @@ y `volumeMounts`).
 ## 9. Conexión con el proyecto final
 
 El requisito 3 del proyecto exige "ConfigMap + Secret sin valores hardcodeados":
-este lab es exactamente ese punto de la rúbrica (2 pts).
+este lab es exactamente ese punto (criterio "Config/secretos y exposición", 8 pts).

@@ -1,6 +1,6 @@
 # Lab 07 · Ciclo de vida del despliegue: recursos, rollout y rollback
 
-**Módulo:** M09 · **Día:** 2 · **Duración:** 60 min (bloque de 2 h con teoría)
+**Módulo:** M09 · **Día:** 2 · **Duración en aula:** 10 min (versión *express*: rollout → fallo → rollback; el lab completo de 60 min es **ASÍNCRONO**)
 **Guía:** alumno · **Carpeta:** `labs/lab07-rollout/`
 
 ---

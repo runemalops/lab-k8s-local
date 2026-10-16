@@ -1,6 +1,6 @@
 # Lab 12 · Debugging de despliegues fallidos y seguridad básica
 
-**Módulo:** M14 · **Día:** 4 · **Duración:** 40 min (bloque de 2 h con teoría)
+**Módulo:** M14 · **Día:** 5 · **Duración en aula:** 25 min (casos 1–2 + RBAC; los casos 3–4 son **ASÍNCRONOS**)
 **Guía:** alumno · **Carpeta:** `labs/lab12-debug/`
 
 ---

@@ -1,6 +1,6 @@
 # Guía del instructor · Lab 10 (M12)
 
-**Duración:** 70 min de lab + 30 min de demo GitOps · **Carpeta:** `labs/lab10-cicd/`
+**Duración:** 35 min de lab (Día 4; teoría M12 15 min + demo GitOps 5 min antes) · **Carpeta:** `labs/lab10-cicd/`
 **Mensaje del bloque:** *"lo que no está automatizado, no existe."*
 **Riesgo del bloque:** es el más frágil del curso → ten preparado el **fallback offline**.
 
@@ -74,5 +74,6 @@ si ≥3 alumnos están bloqueados con lo mismo (regla: demo grupal).
 
 ## 9. Conexión con el proyecto
 
-Requisito 6 del proyecto: pipeline que valide (`kubeconform`), despliegue y tenga job
-verde. Este lab entrega ese punto de la rúbrica (8 pts).
+Requisito 6 del proyecto: pipeline de validación y despliegue. Este lab entrega ese
+requisito (`ci.sh` local aceptado; el workflow de GitHub Actions con job verde son
+puntos extra en `project/SPEC.md` §8).

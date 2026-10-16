@@ -1,6 +1,6 @@
 # Lab 06 · Exposición: Service, DNS e Ingress
 
-**Módulo:** M08 · **Día:** 2 · **Duración:** 45 min (bloque de 1.5 h con teoría)
+**Módulo:** M08 · **Día:** 2 · **Duración en aula:** 20 min (el controlador ingress-nginx ya está instalado)
 **Guía:** alumno · **Carpeta:** `labs/lab06-ingress/`
 
 ---

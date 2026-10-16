@@ -1,6 +1,6 @@
 # Lab 10 · CI/CD: el pipeline que despliega
 
-**Módulo:** M12 · **Día:** 3 · **Duración:** 70 min + 30 min demo (bloque de 2.5 h con teoría)
+**Módulo:** M12 · **Día:** 4 · **Duración en aula:** 35 min (bloque D4 de 2 h)
 **Guía:** alumno · **Carpeta:** `labs/lab10-cicd/`
 
 ---

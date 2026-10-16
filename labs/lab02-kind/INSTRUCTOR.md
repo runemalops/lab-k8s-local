@@ -1,6 +1,6 @@
 # Guía del instructor · Lab 02 (M03)
 
-**Duración:** 35 min de lab (teoría 25 min antes) · **Carpeta:** `labs/lab02-kind/`
+**Duración:** 15 min de lab (Día 1; teoría kind/kubectl 10 min antes) · **Carpeta:** `labs/lab02-kind/`
 
 ---
 

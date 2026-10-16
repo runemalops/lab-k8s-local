@@ -1,6 +1,6 @@
 # Lab 11 · Observabilidad del despliegue
 
-**Módulo:** M13 · **Día:** 4 · **Duración:** 30 min (bloque de 1 h con teoría)
+**Módulo:** M13 · **Día:** 4 · **Duración en aula:** 30 min (bloque D4 de 2 h)
 **Guía:** alumno · **Carpeta:** `labs/lab11-observability/`
 
 ---

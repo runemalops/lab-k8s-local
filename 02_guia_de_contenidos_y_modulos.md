@@ -1,295 +1,283 @@
-# Guía de contenidos y detalle de módulos
+# 02 · Guía de contenidos y módulos (formato 5 días × 2 h)
 
-**Curso:** Introducción a Kubernetes como herramienta de Deployment (entorno local)
-**Uso:** documento de referencia para instructor y alumno; cada módulo indica objetivo, teoría, lab, entregable y errores comunes.
+Este documento es la referencia de contenidos **módulo a módulo**: duración, objetivo,
+teoría, demo, laboratorio, errores comunes del alumno y el PR que lo deja listo.
+Sirve de checklist de desarrollo para el instructor y para medir el avance del alumno.
 
-> Convención: ⏱ duración · 🎯 objetivo · 📖 teoría · 🔧 lab · 📦 entregable · ⚠️ errores comunes
-
----
-
-## DÍA 1 — Fundamentos
-
----
-
-### M01 · Contenedores, imágenes y artefactos de deployment ⏱ 1 h
-
-- **🎯 Objetivo:** distinguir contenedor/imagen/artefacto y producir una imagen desplegable.
-- **📖 Teoría (35 min):**
-  - Contenedores vs VMs (namespaces, cgroups, capas).
-  - Imagen: capas, Dockerfile, tag vs digest, registry (Docker Hub, GHCR).
-  - Artefactos de una app: binario + config + dependencias → imagen.
-  - Por qué el deployment moderno se basa en "build once, deploy anywhere".
-- **🔧 Lab (25 min):** `lab01/`
-  1. Dockerfile de una app estática simple (o nginx con contenido propio).
-  2. `docker build -t curso-web:1.0 .` y `docker run -p 8080:80`.
-  3. Etiquetar versiones (`:1.0`, `:1.1`) y observar capas con `docker history`.
-- **📦 Entregable:** Dockerfile + imagen etiquetada en local.
-- **⚠️ Errores comunes:** imagen sin tag implícito `latest`; build desde directorio malo (`.dockerignore`); puertos confundidos (`-p host:contenedor`).
+> **Formato vigente: 5 días × 2 h = 10 h de clase.**
+> Rutina fija diaria: `0:00–0:05` quiz de calentamiento · `0:05–1:50` teoría esencial + práctica
+> guiada · `1:50–2:00` entregable, retro y limpieza.
+> Los módulos marcados **[ASÍNCRONO]** no van en aula: se dejan como material de ampliación
+> con su lab completo y entregable opcional.
 
 ---
 
-### M02 · Arquitectura de Kubernetes ⏱ 1.5 h
+## Resumen de módulos
 
-- **🎯 Objetivo:** describir qué componentes existen y cómo se reconcilia el estado deseado.
-- **📖 Teoría (60 min):**
-  - Control plane: API server, etcd, scheduler, controller-manager.
-  - Nodos: kubelet, kube-proxy, container runtime.
-  - Unidades: Pod, Node, Namespace, Label/Selector, Annotation.
-  - Modelo declarativo: desired state → reconciliación → estado observado.
-  - Ciclo de vida de un Pod (Pending → Running → Succeeded/Failed).
-  - Add-ons mínimos (CoreDNS, kube-proxy) — sin profundizar.
-- **🔧 Actividad (30 min):** diagrama en pizarra/colaborativo; quiz rápido de 5 preguntas.
-- **📦 Entregable:** diagrama anotado + respuestas del quiz.
-- **⚠️ Errores comunes:** confundir "contenedor" con "pod"; creer que el API server "ejecuta" los pods.
+| Día | Módulos | Labs en aula | Horas |
+|---|---|---|---|
+| **D1** | M01 Contenedores · M02 Arquitectura · M03 kind · M04 kubectl (integrado) · M05 Primer deployment | lab01, lab02, lab04 | 2 h |
+| **D2** | M06 Declarativo · M07 Config/secretos · M08 Exposición · M09 Ciclo de vida (express) | lab05, lab06, lab07 (express) | 2 h |
+| **D3** | M10 Helm · M11 Kustomize **[ASÍNCRONO]** | lab08 | 2 h |
+| **D4** | M12 CI/CD · M13 Observabilidad | lab10, lab11 | 2 h |
+| **D5** | M14 Debugging+seguridad · M15 De local a prod · M16 Proyecto final | lab12 (casos 1–2) + proyecto | 2 h |
+
+**En aula:** 10 de 12 labs (lab03 y lab09 + extensiones de lab07/lab08/lab12 → material asíncrono).
 
 ---
 
-### M03 · Clúster local con kind ⏱ 1 h
+# DÍA 1 — Del contenedor al primer despliegue
 
-- **🎯 Objetivo:** crear, inspeccionar y destruir un clúster local de forma repetible.
-- **📖 Teoría (25 min):**
-  - kind: nodos como contenedores Docker; arquitectura `kind create/delete`.
-  - kubeconfig y contextos: qué mira `kubectl` y por qué.
-  - Alternativas: minikube, k3d, Docker Desktop Kubernetes, k3s — cuándo elegir cada uno.
-- **🔧 Lab (35 min):** `lab02/`
-  1. `kind create cluster --name curso-k8s`.
-  2. `docker ps` → ver los nodos; `kubectl cluster-info`; `kubectl get nodes -o wide`.
-  3. Crear un segundo clúster temporal y usar `--context` para conmutar.
-  4. `kind delete cluster --name curso-k8s` y recrearlo (tiempo objetivo: <2 min).
-- **📦 Entregable:** capturas de `kubectl get nodes` con los 2 contextos y del ciclo create/delete.
-- **⚠️ Errores comunes:** Docker no corriendo; contexto equivocado (`kubectl` apunta a otro clúster); clústeres huérfanos que consumen RAM.
+**Objetivo del día:** que el alumno vea la cadena completa en 2 h: imagen → clúster →
+manifiesto → servicio funcionando en su equipo.
 
----
+## M01 — Contenedores, imágenes y artefactos de deployment
 
-### M04 · kubectl: la brújula diaria ⏱ 1.5 h
+**Tipo:** Teoría (15 min) + Lab01 (15 min) · **Carpeta:** `labs/lab01-containers/`
 
-- **🎯 Objetivo:** usar kubectl para observar, inspeccionar y modificar recursos sin memorizar todo.
-- **📖 Teoría (35 min):**
-  - Patrón `kubectl <verbo> <tipo> <nombre> [-n ns]`.
-  - Ver: `get`, `-o wide/yaml/json`, `--show-labels`.
-  - Inspección: `describe`, `logs`, `exec`, `edit` (y cuándo **no** usarlo).
-  - Aplicación: `apply`, `delete`, `label`, `annotate`; descubrimiento con `api-resources`.
-- **🔧 Lab (50 min):** `lab03/`
-  1. `kubectl run` temporal para practicar.
-  2. Identificar un pod: logs, env (`exec -- env`), proceso interno.
-  3. Modificar con `apply` de un YAML descargado con `get -o yaml`.
-- **📦 Entregable:** cheat-sheet personal de 10 comandos kubectl.
-- **⚠️ Errores comunes:** olvidar `-n` (busca en `default`); confundir nombre del recurso con tipo; pods efímeros que desaparecen (`kubectl run --rm -it`).
+- **Objetivo:** comprender contenedor vs VM, imagen vs contenedor, tag, registry y por qué el
+  artefacto de deployment es la imagen.
+- **Teoría (15 min):** aislamiento de procesos, capas/union FS, `Dockerfile` mínimo
+  (FROM/COPY/RUN/EXPOSE/USER), tags inmutables, semver aplicado a imágenes.
+- **Laboratorio (15 min):** Lab01 — generar `nginx:1.27` propio con contenido de la página,
+  crear `Dockerfile` y construir `curso-web:1.0`.
+- **Errores comunes:** `:latest` explícito (penalizado), imágenes gigantes sin slim, no
+  entender que el contenedor corre la imagen.
+- **Como lo evalúa el alumno:** `docker images | grep curso-web` muestra su tag.
+- **Extensión / PR:** reemplazar base por `alpine` y comparar tamaños (20 lines extra).
 
----
+## M02 — Arquitectura de Kubernetes: control plane, nodos, desired state
 
-### M05 · Primer deployment declarativo ⏱ 2 h
+**Tipo:** Teoría (10 min) · **Sin lab** · **Carpeta:** diagrama en `slides/`
 
-- **🎯 Objetivo:** desplegar nginx con Deployment + Service + Namespace desde YAML.
-- **📖 Teoría (30 min):**
-  - Pod vs Deployment vs ReplicaSet: quién crea a quién.
-  - Service: selector → endpoints; por qué el Pod no es estable.
-  - YAML mínimo anotado (apiVersion, kind, metadata, spec).
-- **🔧 Lab (70 min):** `lab04/`
-  1. Namespace `lab04`.
-  2. `deployment.yaml` (2 réplicas, imagen `nginx:1.27`, labels).
-  3. `service.yaml` (ClusterIP y luego LoadBalancer → kind + cloud-provider-kind o port-forward).
-  4. Probar: `curl` vía `kubectl port-forward`.
-  5. Escalar: `kubectl scale` y observar ReplicaSet.
-- **📦 Entregable:** `deployment.yaml` + `service.yaml` + evidencia de `kubectl get all -n lab04`.
-- **⚠️ Errores comunes:** selector que no coincide con pod labels; imagen tag inexistente; Deployment sin `replicas` esperando 1 por defecto.
+- **Objetivo:** explicar qué es el API server, etcd, scheduler y controller-manager; qué es un
+  nodo; y la idea de *desired state*.
+- **Teoría (10 min):** API server como única puerta; etcd como estado; scheduler y controllers
+  en bucle de reconciliación; kubelet + container runtime en el nodo; Pod como unidad.
+- **Laboratorio:** diagrama en la pizarra + pregunta clave: "si borro el pod, ¿quién lo repone?"
+- **Errores comunes:** pensar que K8s es un PaaS; creer que SSH al nodo es la forma de operar.
+- **Como lo evalúa el alumno:** en 60 segundos dibujar la arquitectura y explicar el bucle
+  `spec → reconcile → status`.
+- **Extensión / PR:** M01/M02 en profundidad en el material asíncrono (CRDs y operators).
 
----
+## M03 — Clúster local con kind
 
-## DÍA 2 — K8s como herramienta de deployment
+**Tipo:** Teoría (5 min) + Lab02 (15 min) · **Carpeta:** `labs/lab02-kind/`
 
----
+- **Objetivo:** crear, inspeccionar y destruir un clúster en <2 min; entender *contexto*.
+- **Teoría (5 min):** kind = clúster en contenedores; kubeconfig y contextos; alternativas
+  (minikube, k3d, Docker Desktop, Rancher Desktop) y cuándo usar cada una.
+- **Laboratorio (15 min):** Lab02 — `kind create cluster --name curso-k8s`, inspeccionar
+  nodos/contenedores del control plane, borrar y recrear.
+- **Errores comunes:** olvidar el `--name` y acumular clústers; ignorar el *contexto activo*.
+- **Como lo evalúa el alumno:** `kind get clusters` y `kubectl config current-context`.
+- **Extensión / PR:** entorno alternativo funcionando (minikube/Docker Desktop) para el
+  ejercicio de compatibilidad.
 
-### M06 · El modelo declarativo ⏱ 1 h
+## M04 — kubectl: contexto, describir, logs, aplicar, eliminar
 
-- **🎯 Objetivo:** razonar por qué declarativo escala mejor que imperativo.
-- **📖 Teoría (35 min):**
-  - Imperativo (`kubectl create/scale`) vs declarativo (`apply` de manifiestos).
-  - Reconciliación: qué pasa si borras un pod manualmente.
-  - Git como fuente de verdad: diff → review → apply (semilla de GitOps).
-  - `kubectl diff` y `apply --dry-run=server`.
-- **🔧 Actividad (25 min):** laboratorio del "sabotaje": borrar un pod y describir qué hace el sistema; comparar `scale` imperativo vs cambio de `replicas` en YAML (drift).
-- **📦 Entregable:** notas de la actividad (qué cambió y qué lo reparó).
-- **⚠️ Errores comunes:** aplicar cambios con `kubectl edit` y perderlos en el siguiente `apply`; manifiestos modificados fuera de Git.
+**Tipo:** Teoría (5 min) + práctico integrado en Lab04 · **Carpeta:** `labs/lab03-kubectl/` **[ASÍNCRONO]**
 
----
+- **Objetivo:** dominar el patrón `kubectl <verbo> <tipo> <nombre>` y los verbos del día a día.
+- **Teoría (5 min, en aula):** `get/describe/logs/apply/delete/edit`, flags clave
+  (`-n`, `-l`, `-o wide/yaml`, `--context`), autocompletado.
+- **En aula:** se practica dentro del Lab04 (get/describe/port-forward/scale).
+- **Laboratorio completo (50 min, asíncrono):** Lab03 — dashboard mental con verbos, filtro por
+  labels, describir un pod caído, generar YAML, borrar con elegancia.
+- **Errores comunes:** pegar YAML gigantes; confundir `describe` con `get`; saltarse `-n`.
+- **Como lo evalúa el alumno:** cheat-sheet de una página con 15 comandos mínimos.
+- **Extensión / PR:** traducir un comando imperativo a manifiesto declarativo sin romper nada.
 
-### M07 · Configuración y secretos ⏱ 1.5 h
+## M05 — Primer deployment declarativo
 
-- **🎯 Objetivo:** externalizar configuración y credenciales fuera de la imagen.
-- **📖 Teoría (40 min):**
-  - ConfigMap (texto) y Secret (base64 ≠ cifrado); `stringData`.
-  - Inyección: `env`, `envFrom`, volúmenes (`items`, montaje en path).
-  - Buenas prácticas: no hardcodear, rotación, qué **no** va en un Secret.
-- **🔧 Lab (45 min):** `lab05/`
-  1. ConfigMap con `APP_ENV` y archivo de config montado.
-  2. Secret con credenciales de ejemplo y `envFrom`.
-  3. App que muestra su configuración en pantalla/endpoint.
-  4. Cambio de ConfigMap → `rollout restart` para ver propagación.
-- **📦 Entregable:** `configmap.yaml`, `secret.yaml` (valores de ejemplo) + evidencia del cambio en caliente.
-- **⚠️ Errores comunes:** olvidar `restart` tras cambiar env vars; secretos commiteados en base64 como si fueran privados; claves con guiones inválidas para `env`.
+**Tipo:** Teoría (10 min) + Lab04 (30 min) · **Carpeta:** `labs/lab04-first-deploy/`
+
+- **Objetivo:** leer y modificar un manifiesto YAML de Deployment + Service y desplegarlo.
+- **Teoría (10 min):** anatomía mínima de un manifiesto (apiVersion/kind/metadata/spec),
+  labels y selectors, Namespace por ejercicio, desired state.
+- **Laboratorio (30 min):** Lab04 — namespace `lab04`, deployment `nginx:1.27` con 2 réplicas,
+  Service y `port-forward`, escalar, sabotaje de pod y recuperación.
+- **Errores comunes:** indentación de YAML, selectors que no casan, confundir Service con Ingress.
+- **Como lo evalúa el alumno:** `kubectl get all -n lab04` en verde y la app respondiendo por
+  port-forward.
+- **Extensión / PR:** añadir un Deployment de la app real del alumno (sustituir nginx).
+- **Entregable D1:** `deployment.yaml` + `service.yaml` + `evidence.txt`.
 
 ---
 
-### M08 · Exposición: Service, DNS e Ingress ⏱ 1.5 h
+# DÍA 2 — Configuración, exposición y ciclo de vida
 
-- **🎯 Objetivo:** exponer servicios dentro y fuera del clúster de forma controlada.
-- **📖 Teoría (40 min):**
-  - Service types: ClusterIP (interno), NodePort, LoadBalancer (kind: cloud-provider-kind o port-forward como alternativa).
-  - DNS interno: `<svc>.<ns>.svc.cluster.local`.
-  - Ingress: reglas host/path, controller ingress-nginx, `ingressClassName`.
-  - TLS: mención (cert-manager) sin implementar en el lab.
-- **🔧 Lab (45 min):** `lab06/`
-  1. Instalar ingress-nginx en kind (manifest oficial o Helm chart).
-  2. Entrada para `app.local` con paths `/api` y `/`.
-  3. Entrada local (`/etc/hosts` o `curl -H "Host: app.local"`) y probar.
-  4. Observar que el Service ClusterIP no es alcanzable desde fuera.
-- **📦 Entregable:** `ingress.yaml` + prueba con `curl` exitosa.
-- **⚠️ Errores comunes:** 404 del default backend (host/path mal); olvidar `ingressClassName`; Service correcto pero Deployment sin labels del selector.
+**Objetivo del día:** separar configuración y código, exponer el servicio fuera del clúster y
+saber revertir un release malo.
 
----
+## M06 — K8s como herramienta de deployment: declarativo vs imperativo
 
-### M09 · Ciclo de vida del despliegue: recursos, rollout y rollback ⏱ 2 h
+**Tipo:** Teoría (10 min) · **Carpeta:** demo de `slides/`
 
-- **🎯 Objetivo:** controlar actualizaciones versionadas y recuperarse de un mal release.
-- **📖 Teoría (45 min):**
-  - `resources.requests/limits` y su efecto (cuellos de botella, OOMKilled).
-  - RollingUpdate: `maxSurge`/`maxUnavailable`; `rollout status/history/pause/undo`.
-  - Versionado de imágenes: tags inmutables vs `latest`.
-  - Health checks: `livenessProbe`/`readinessProbe` y su rol en el rollout.
-- **🔧 Lab (60 min):** `lab07/`
-  1. Desplegar `curso-web:1.0` con requests/limits y probes.
-  2. Rollout a `1.1` observando pods viejos/nuevos.
-  3. Rollout fallido a un tag inexistente → ver bloqueo → `rollout undo`.
-  4. Probar `kubectl set image` (imperativo) vs editar YAML y comparar.
-- **📦 Entregable:** salida de `kubectl rollout history` con al menos 2 versiones y rollback demostrado.
-- **⚠️ Errores comunes:** `ImagePullBackOff` por tag mal escrito; limits demasiado bajos → OOMKilled; probes mal calibradas → reinicios infinitos.
+- **Objetivo:** entender por qué el estado deseado vive en Git y el clúster lo reconcilia.
+- **Teoría (10 min):** imperativo vs declarativo; reconciliación; Git como fuente de verdad;
+  drift; alias-vs-fuente de verdad (demo del sabotaje: borrar pods y ver la recuperación).
+- **Laboratorio:** demo en vivo del instructor (5 min) + quiz de contraintuición.
+- **Errores comunes:** "kubedit" (editar con `kubectl edit` sin reflejarlo en Git).
+- **Como lo evalúa el alumno:** reproducir el sabotaje y explicar qué lo repuso.
+- **Extensión / PR:** pequeñas (10–20 líneas): manual "imperativo → declarativo".
 
----
+## M07 — Configuración y secretos
 
-## DÍA 3 — Empaquetado y automatización
+**Tipo:** Teoría (15 min) + Lab05 (30 min) · **Carpeta:** `labs/lab05-config/`
 
----
+- **Objetivo:** externalizar config y secretos; actualizar sin reconstruir la imagen.
+- **Teoría (15 min):** ConfigMap y Secret, `env` vs volúmenes, `envFrom`, propagación y
+  `rollout restart`, buenas prácticas de secretos (base64 ≠ cifrado).
+- **Laboratorio (30 min):** Lab05 — app `hashicorp/http-echo` con config externa y secreto,
+  demostrar propagación con `rollout restart`.
+- **Errores comunes:** reiniciar deploy a mano (funciona, pero sin evento de rollout); hardcodear
+  credenciales en el manifiesto.
+- **Como lo evalúa el alumno:** ver el cambio de mensaje sin tocar la imagen.
+- **Extensión / PR:** consumir el ConfigMap como archivo en `volumeMounts` en vez de env.
+- **Entregable D2 (parte config):** manifiestos + evidencia de propagación.
 
-### M10 · Helm: empaquetando despliegues ⏱ 3 h (1.5 + 1.5)
+## M08 — Exposición: ClusterIP, NodePort, port-forward e Ingress
 
-- **🎯 Objetivo:** convertir manifiestos sueltos en un chart parametrizado y versionado.
-- **📖 Teoría (50 min):**
-  - Conceptos: chart, values, release, repository, version (SemVer de charts).
-  - Comandos: `helm install/upgrade/rollback/uninstall/list/lint/template`.
-  - Estructura del chart y `templates/` con sintaxis Go.
-- **🔧 Lab (60 min):** `lab08/`
-  1. `helm create curso-web` y podar lo innecesario.
-  2. Envolver el deployment + service de la app de D2.
-  3. Parametrizar `image.tag`, `replicas`, `env`.
-  4. `helm lint`, `helm template`, `helm install web ./curso-web --set replicas=3`.
-- **🔧 Lab 2 (50 min):** templates avanzados (condicionales `ingress.enabled`, helpers `_helpers.tpl`), `values-dev.yaml` vs `values-staging.yaml`, `helm upgrade` y `helm rollback`.
-- **📦 Entregable:** chart funcional con 2 archivos de values y evidencia de upgrade/rollback.
-- **⚠️ Errores comunes:** YAML roto tras editar plantillas (usar siempre `helm template` para validar); nombres duplicados de release; valores con números interpretados como strings.
+**Tipo:** Teoría (15 min) + Lab06 (20 min) · **Carpeta:** `labs/lab06-ingress/`
 
----
+- **Objetivo:** llegar a la app desde fuera con rutas por host/path.
+- **Teoría (15 min):** ClusterIP/NodePort/LoadBalancer, DNS interno (`svc.ns.svc.cluster.local`),
+  port-forward, Ingress + ingress-nginx (controlador ya instalado por el instructor).
+- **Laboratorio (20 min):** Lab06 — host `app.local`, rutas `/` y `/api`, verificación con
+  `curl -H "Host: app.local ..."` y fallback con port-forward.
+- **Errores comunes:** 404 por path, Service sin endpoints, olvidar el header `Host`.
+- **Como lo evalúa el alumno:** `curl` responde en ambas rutas.
+- **Extensión / PR:** segundo host (`staging.app.local`).
 
-### M11 · Kustomize y multi-entorno ⏱ 1.5 h
+## M09 — Ciclo de vida: rollout, rollback y versionado de imágenes
 
-- **🎯 Objetivo:** mantener una base de manifiestos y variantes por entorno sin duplicar archivos.
-- **📖 Teoría (35 min):**
-  - Base + overlays; `kustomization.yaml`, `patches`, `images`, `commonLabels`.
-  - Helm vs Kustomize: cuándo usar cada uno (paquete distribuible vs patch sobre Git).
-  - `kubectl apply -k` nativo (sin binario extra).
-- **🔧 Lab (45 min):** `lab09/`
-  1. Crear `base/` con deployment + service.
-  2. `overlays/dev` (1 réplica, tag dev) y `overlays/staging` (3 réplicas, recursos mayores).
-  3. `kubectl apply -k overlays/dev` y luego `staging` en otro namespace.
-  4. Comparar salida con `kustomize build`.
-- **📦 Entregable:** estructura base/overlays + evidencia de los 2 despliegues diferenciados.
-- **⚠️ Errores comunes:** patch que no matchea por GVK/name erróneos; modificar la base en vez del overlay; olvidar regenerar (`build` es en tiempo de aplicación, no hay estado).
+**Tipo:** Teoría + demo (15 min) + Lab07 *express* (10 min dentro del bloque) · **Carpeta:** `labs/lab07-rollout/` (versión completa **[ASÍNCRONA]**)
+
+- **Objetivo:** desplegar una imagen nueva, detectar el fallo y revertir sin pánico.
+- **Teoría (15 min):** requests/limits, RollingUpdate, RevisionHistoryLimit, `rollout
+  status/history/undo/set image`, etiquetado inmutable de imágenes.
+- **En aula (10 min):** Lab07 *express* — subir a `nginx:1.27.1`, provocar el fallo con
+  `nginx:1.27.999`, `rollout undo` documentado. OOMKilled/probes → **asíncrono**.
+- **Errores comunes:** "resolver" con delete+apply (rompe el historial); imágenes `:latest`.
+- **Como lo evalúa el alumno:** ver 2 revisiones en `rollout history` y volver a la 1ª.
+- **Extensión / PR (asíncrona):** lab07 completo (probes, OOMKilled, cambio de imagen por template).
+- **Entregable D2:** manifiestos de config/exposición + evidencia de rollback.
 
 ---
 
-### M12 · CI/CD: el pipeline que despliega ⏱ 2.5 h (2 + 0.5)
+# DÍA 3 — Empaquetado de despliegues con Helm
 
-- **🎯 Objetivo:** automatizar validación y despliegue de manifiestos desde un pipeline.
-- **📖 Teoría (50 min):**
-  - Fases: lint/validate → test → build image → push → deploy.
-  - Validación de manifiestos: `kubeconform`/`kubeval`, `yamllint`, `helm lint`.
-  - Desplegar desde CI a un clúster: kind en el propio runner; kubeconfig como secreto.
-  - Estrategias de entorno: `main` → staging (manual) → prod; entornos efímeros.
-- **🔧 Lab (70 min):** `lab10/`
-  1. Workflow GitHub Actions (o GitLab CI) con jobs: `validate` + `deploy`.
-  2. `validate`: kubeconform sobre `overlays/dev`.
-  3. `deploy`: crear kind, `kubectl apply -k` (o `helm upgrade --install`), comprobación `kubectl rollout status`.
-  4. Provocar un fallo de validación en PR y ver el job rojo.
-- **🔧 Demo (30 min):** GitOps con Flux/ArgoCD — qué cambia respecto a push-based.
-- **📦 Entregable:** pipeline ejecutado (captura de job verde + uno rojo).
-- **⚠️ Errores comunes:** kubeconfig del clúster local no disponible en el runner (usar kind en el job); secretos mal guardados; deploy sin comprobación posterior.
+**Objetivo del día:** pasar de YAML sueltos a un paquete versionado y parametrizable.
 
----
+## M10 — Helm: charts, values, upgrade y rollback
 
-## DÍA 4 — Operación y entrega
+**Tipo:** Teoría (25 min) + Lab08 (75 min, en 2 sub-bloques) · **Carpeta:** `labs/lab08-helm/`
 
----
+- **Objetivo:** empaquetar un despliegue, parametrizarlo y gestionarlo por versiones.
+- **Teoría (25 min):** conceptos chart/values/release/repository, layout de un chart,
+  funciones clave (`Range`, `toYaml`, `Include`), `lint/template/install/upgrade/rollback`.
+- **Lab08 · parte 1 (40 min):** chart del servicio web — podar `helm create`, parametrizar
+  imagen y réplicas, `--set`, `helm lint` + `helm template` antes de aplicar.
+- **Lab08 · parte 2 (35 min):** `values-dev.yaml` vs `values-staging.yaml`, upgrade entre
+  entornos y rollback a la revisión anterior.
+- **Errores comunes:** editar plantillas generadas a mano (siguiente upgrade las pisa); olvidar
+  `helm lint`; mezclar releases en el mismo namespace.
+- **Como lo evalúa el alumno:** `helm list -A` con su release y el rollback exitoso.
+- **Extensión / PR (asíncrona):** plantillas avanzadas (helpers, condicionales, `NOTES.txt`).
+- **Entregable D3:** chart con 2 files de values + evidencia de upgrade/rollback.
 
-### M13 · Observabilidad del despliegue ⏱ 1 h
+## M11 — Kustomize y multi-entorno: overlays dev/staging **[ASÍNCRONO]**
 
-- **🎯 Objetivo:** responder "¿qué está pasando con mi despliegue?" en minutos.
-- **📖 Teoría (25 min):**
-  - Señales: logs, events, métricas; `kubectl top` (metrics-server).
-  - Flujo de diagnóstico: `get` → `describe` → `events` → `logs` → `exec`.
-  - Recursos de clúster: `kubectl top nodes`, uso y límites.
-- **🔧 Lab (30 min):** `lab11/`
-  1. Provocar CrashLoopBackOff (comando inválido en el contenedor) y leer el ciclo.
-  2. Buscar el evento raíz en `kubectl describe pod`.
-  3. Comparar un pod sano vs uno fallido.
-- **📦 Entregable:** mini-guía de diagnóstico (árbol de decisión de 1 página).
-- **⚠️ Errores comunes:** mirar solo los logs actuales (usar `--previous`); ignorar events por "ruido".
+**Tipo:** Lab (45 min) · **Carpeta:** `labs/lab09-kustomize/` · **Modalidad:** material opcional
+
+- **Objetivo:** lograr multi-entorno *sin plantillas*, solo con overlays.
+- **Qué contiene:** `base/` + `overlays/dev` + `overlays/staging` (réplicas e imagen
+  distintas), `kubectl apply -k` (o `kustomize build`), nota sobre `commonLabels` deprecado y
+  el bloque moderno `labels`/`includeSelectors`.
+- **En aula:** solo la comparación Helm vs Kustomize en el cierre del Día 3 (5 min).
+- **Errores comunes:** aplicar la base directamente (sin overlays); edits en `base/` que rompen
+  los overlays.
+- **Extensión / PR:** añadir un tercer overlay `prod` con réplicas de producción.
 
 ---
 
-### M14 · Debugging y seguridad básica ⏱ 2 h (1 + 1)
+# DÍA 4 — CI/CD y diagnóstico del despliegue
 
-- **🎯 Objetivo:** resolver los 6 fallos de despliegue más comunes y aplicar mínimo viable de seguridad.
-- **📖 Teoría (40 min):**
-  - Matriz de fallos: Pending, ImagePullBackOff, CrashLoopBackOff, OOMKilled, ErrImagePull, Service sin endpoints.
-  - Seguridad: RBAC básico (Role/RoleBinding/ServiceAccount), SecurityContext (`runAsNonRoot`), imágenes de origen conocido y tag fijo.
-  - Secretos en la práctica: qué sí (Kubernetes Secret para demos) y qué no (Key Vault/externo en producción).
-- **🔧 Lab (40 min):** `lab12/`
-  1. Práctica de diagnóstico en parejas: 4 manifiestos rotos (entregados rotos a propósito) → arreglar y documentar.
-  2. ServiceAccount con Role que solo permite `get/list` de pods → probar con `kubectl auth can-i`.
-- **📦 Entregable:** tabla de fallo → causa → solución + manifiesto RBAC funcional.
-- **⚠️ Errores comunes:** dar `cluster-admin` por comodidad; asumir que base64 es cifrado.
+**Objetivo del día:** automatizar la validación/despliegue y diagnosticar fallas en minutos.
 
----
+## M12 — CI/CD que despliega en Kubernetes
 
-### M15 · De local a producción ⏱ 30 min
+**Tipo:** Teoría + demo (20 min) + Lab10 (35 min) · **Carpeta:** `labs/lab10-cicd/`
 
-- **🎯 Objetivo:** entender qué cambia (y qué se conserva) al llevar el mismo despliegue a un clúster gestionado.
-- **📖 Teoría (30 min):**
-  - Mismos manifiestos, entorno distinto: nodos gestionados (AKS/EKS/GKE), Ingress con cloud LB, registry gestionado, secret manager, autoscaling.
-  - Costos y límites de un clúster real.
-  - Ruta de aprendizaje: IaC (Terraform/OpenTofu), GitOps, CKA/CKAD.
-  - Nota: los manifiestos/Helm/Kustomize de este curso son portables sin cambios.
+- **Objetivo:** pipeline que valida manifiestos y despliega al clúster local.
+- **Teoría (15 min):** fases del pipeline (lint → build → push → deploy → smoke test),
+  validación de manifiestos, kind en CI, agente y runner, secretos del pipeline.
+- **Demo (5 min):** GitOps con Flux/ArgoCD — "tu clúster vigila el repo".
+- **Laboratorio (35 min):** Lab10 — pipeline local `bash labs/lab10-cicd/ci.sh`
+  (verde + rojo a propósito), workflow de GitHub Actions en `solution/`.
+- **Errores comunes:** ejecutar todo sin `set -e`; workflow que solo "existe" pero nunca corrió.
+- **Como lo evalúa el alumno:** job verde + job rojo documentado.
+- **Extensión / PR:** pipeline corriendo de verdad en GitHub Actions.
+- **Entregable D4:** captura de pipeline verde + rojo.
 
----
+## M13 — Observabilidad del despliegue
 
-### M16 · Proyecto final ⏱ 2.5 h + 30 min evaluación
+**Tipo:** Teoría (15 min) + Lab11 (30 min) · **Carpeta:** `labs/lab11-observability/`
 
-- **🎯 Objetivo:** integrar 4 días en un entregable reproducible.
-- **🔧 Trabajo:** ver especificación en `01_plan_de_contenidos.md` §7 (requisitos y rúbrica).
-- **📋 Flujo sugerido al alumno:**
-  1. Repo limpio + app de 2 servicios (30 min).
-  2. Manifiestos base + Kustomize/Helm con 2 entornos (45 min).
-  3. Pipeline CI/CD validando y desplegando (30 min).
-  4. Ingress, config, recursos, rollback demo (20 min).
-  5. README + evidencias + limpieza (15 min).
-- **📦 Entregable:** repo Git + demo de 5 min por equipo + checklist de limpieza firmado.
+- **Objetivo:** responder "¿qué está pasando?" con el flujo `get → describe → events → logs`.
+- **Teoría (15 min):** eventos, códigos y señales; árbol de decisión de 1 página; diferenciar
+  fallo de *la app* vs fallo de *la configuración* vs fallo de *la infra*.
+- **Laboratorio (30 min):** Lab11 — provocar `CrashLoopBackOff` con `nginx:busted` (health
+  wrong) y destinarlo con el árbol de decisión; entregar `guia-diagnostico.md`.
+- **Errores comunes:** mirar logs sin mirar events; no escalar 0 podos visibles.
+- **Como lo evalúa el alumno:** "diagnostica en 60 s este clúster caído".
+- **Extensión / PR:** añadir un caso de error propio al árbol de decisión.
+- **Entregable D4:** `guia-diagnostico.md`.
 
 ---
 
-## Resumen de entregables por día
+# DÍA 5 — Seguridad, de local a producción y proyecto final
 
-| Día | Entregable clave | Formato |
-|---|---|---|
-| 1 | Manifiestos primer deployment + evidencia kubectl | Archivos + captura |
-| 2 | App de 2 servicios completa + rollback demostrado | Archivos YAML + capturas |
-| 3 | Chart Helm o estructura Kustomize + pipeline verde | Repo + captura CI |
-| 4 | Proyecto final (§7) + limpieza | Repo + demo + checklist |
+**Objetivo del día:** seguridad mínima, el salto a nube y la entrega final.
+
+## M14 — Debugging de despliegues fallidos y seguridad básica
+
+**Tipo:** Teoría (20 min) + Lab12 casos 1–2 (25 min) · **Carpeta:** `labs/lab12-debug/`
+
+- **Objetivo:** resolver los 4 fallos clásicos y aplicar RBAC mínimo.
+- **Teoría (20 min):** matriz de fallos (Pending, CrashLoopBackOff, ImagePullBackOff, Service
+  sin endpoints); RBAC (Role/RoleBinding, `kubectl auth can-i`); Secrets y buenas prácticas
+  de imágenes (tag + usuario no-root).
+- **Laboratorio en aula (25 min):** casos 1 y 2 en parejas; luego ServiceAccount con permisos
+  acotados + comprobación `auth can-i`.
+- **Casos 3 y 4:** material **[ASÍNCRONO]** con `solution/fixed/` y `solution/diagnostico.md`.
+- **Errores comunes:** pegar la solución antes de leer events; `ClusterRoleBinding` por pereza.
+- **Como lo evalúa el alumno:** `kubectl auth can-i` devolviendo `yes`/`no` correctos.
+- **Extensión / PR:** definir un Role acotado al namespace del proyecto.
+
+## M15 — De local a producción
+
+**Tipo:** Teoría (10 min) · **Carpeta:** `slides/`
+
+- **Objetivo:** enumerar qué cambia al llevar el despliegue a nube/CI real.
+- **Teoría (10 min):** nodos gestionados (AKS/EKS/GKE), Ingress con LoadBalancer + DNS y TLS,
+  secretos en el pipeline/secret manager, imágenes en un registry y costes.
+- **Laboratorio:** solo diagrama "lo que cambia" y pregunta: ¿qué no se lleva a producción?
+- **Errores comunes:** creer que el clúster local se "promueve" a producción.
+- **Extensión / PR:** camino de actualización a AKS/EKS/GKE con Git+CI (plan escrito).
+
+## M16 — Proyecto final
+
+**Tipo:** Lab evaluado (50 min en aula) · **Carpeta:** `project/` (`SPEC.md` + `starter/`)
+
+- **Objetivo:** entregar una app desplegable reproducible en un clúster limpio.
+- **En aula (50 min):** arranque con `project/starter/` + **ruta express** de `project/SPEC.md`
+  (2 servicios, Helm con dev/staging, config/secretos, exposición, un rollback, `ci.sh`).
+  Ampliación opcional (Kustomize, CI en la nube, TLS) queda fuera de evaluación.
+- **Cierre (10 min):** demos express (2 min/equipo), rúbrica, evaluación y **checklist de
+  limpieza final**.
+- **Errores comunes:** README que no permite reproducir el despliegue desde cero.
+- **Como lo evalúa el alumno:** seguir su propio README en una terminal limpia < 15 min.
+- **Extensión / PR:** completar la ruta completa del SPEC después del curso.
+- **Entregable D5:** repo + rúbrica 40 pts + evidencia de clúster limpio.

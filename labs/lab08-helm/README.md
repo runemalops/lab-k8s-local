@@ -1,6 +1,6 @@
 # Lab 08 · Helm: empaquetando despliegues
 
-**Módulo:** M10 · **Día:** 3 · **Duración:** 60 + 50 min (bloque de 3 h con teoría)
+**Módulo:** M10 · **Día:** 3 · **Duración en aula:** 75 min (40 min parte 1 + 35 min parte 2)
 **Guía:** alumno · **Carpeta:** `labs/lab08-helm/`
 
 ---

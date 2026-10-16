@@ -1,6 +1,6 @@
 # Guía del instructor · Lab 12 (M14)
 
-**Duración:** 40 min de lab (40 min de teoría antes) · **Carpeta:** `labs/lab12-debug/`
+**Duración:** 25 min en aula (Día 5: casos 1–2 en parejas + `kubectl auth can-i`) · casos 3–4 **ASÍNCRONOS** · **Carpeta:** `labs/lab12-debug/`
 **Mensaje del bloque:** *"el 90 % del debugging es leer bien el describe."*
 
 ---

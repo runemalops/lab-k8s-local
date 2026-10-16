@@ -7,7 +7,8 @@
 
 ## 1. Bienvenida y qué esperar
 
-- **Qué aprenderás:** llevar una aplicación de tu editor de código a un clúster Kubernetes real (local, en tu laptop), con despliegues versionados, configuración externa, empaquetado (Helm/Kustomize) y automatización (CI/CD).
+- **Qué aprenderás:** llevar una aplicación de tu editor de código a un clúster Kubernetes real (local, en tu laptop), con despliegues versionados, configuración externa, empaquetado (Helm) y automatización (CI/CD).
+- **Formato:** **5 días × 2 h (10 h de clase)**. El aula es práctica: la teoría esencial va en clase y las extensiones quedan como material asíncrono.
 - **Qué NO es este curso:** administración avanzada de clusters, certificaciones oficiales, ni despliegue en la nube (ver "continuidad" en §8).
 - **Compromiso:** ~2 h de práctica extra entre día y día. Quien solo asiste a clase no alcanza el proyecto final.
 
@@ -57,19 +58,24 @@ Si algo falla → `setup/troubleshooting-setup.md` y avisa al instructor **antes
 
 ---
 
-## 3. Estructura de los 4 días (vista estudiante)
+## 3. Estructura de los 5 días (vista estudiante)
 
-| Día | Tema | Entregable (antes de las 17:00) |
+| Día | Tema | Entregable (al cierre de la sesión) |
 |---|---|---|
 | **1** | Contenedores + arquitectura K8s + tu primer clúster (kind) + primer deployment | `deployment.yaml` + `service.yaml` + `evidence.txt` |
-| **2** | Modelo declarativo, configuración, exposición (Ingress), rollout y rollback | App de 2 servicios (5 manifiestos) + evidencia de rollback |
-| **3** | Helm, Kustomize multi-entorno y pipeline CI/CD | Chart o estructura Kustomize + pipeline con job verde |
-| **4** | Observabilidad, debugging, seguridad, proyecto final | Repo del proyecto + demo + limpieza firmada |
+| **2** | Modelo declarativo, configuración, exposición (Ingress), rollout y rollback | Manifiestos de config/exposición + evidencia de rollback |
+| **3** | Empaquetado de despliegues con Helm (dev/staging) | Chart con 2 `values-*.yaml` + evidencia de upgrade/rollback |
+| **4** | CI/CD que despliega + diagnóstico de despliegues fallidos | Pipeline verde + rojo + `guia-diagnostico.md` |
+| **5** | Seguridad (RBAC), de local a producción y **proyecto final** | Repo del proyecto + demo express + limpieza final |
+
+**Material asíncrono (opcional, no va en clase):** `lab03-kubectl` (kubectl a fondo),
+`lab09-kustomize` (multi-entorno con overlays), la versión completa de `lab07-rollout`
+(probes y OOMKilled), plantillas avanzadas de Helm y los casos 3–4 de `lab12-debug`.
 
 ### Rutina diaria recomendada
-- **Antes de clase (30 min):** leer el resumen del módulo en `02_guia_de_contenidos_y_modulos.md`.
-- **Durante:** toma notas de errores y soluciones (será tu cheat-sheet).
-- **Después (1–2 h):** repetir el lab sin seguir la guía y subir el entregable al repo.
+- **Antes de clase (15 min):** leer el resumen del módulo en `02_guia_de_contenidos_y_modulos.md`.
+- **Durante:** toma notas de errores y soluciones (será tu cheat-sheet); los últimos 10 min son de entregable y **limpieza**.
+- **Después (1–2 h):** repetir el lab sin seguir la guía, subir el entregable y, si quieres, avanzar material asíncrono.
 
 ### Cómo usar las carpetas de cada lab
 
@@ -111,14 +117,19 @@ Labs del curso: `lab01-containers` · `lab02-kind` · `lab03-kubectl` · `lab04-
 - [ ] `notes-errors.md` con 3 errores que te hayan costado y su solución.
 
 ### Día 3
-- [ ] Chart Helm **o** estructura Kustomize con `dev` y `staging`.
-- [ ] Pipeline CI/CD ejecutado (captura verde + una roja de validación fallida).
+- [ ] Chart Helm con `values-dev.yaml` y `values-staging.yaml`.
+- [ ] Evidencia de `helm upgrade` y `helm rollback`.
 - [ ] Comandos de reproducción en el README.
 
-### Día 4 (proyecto final)
-- [ ] Repo completo según especificación (rúbrica en `01_plan_de_contenidos.md` §7).
+### Día 4
+- [ ] Pipeline ejecutado localmente (`bash labs/lab10-cicd/ci.sh`): captura verde + una roja.
+- [ ] `guia-diagnostico.md` con el árbol de decisión `get → describe → events → logs`.
+- [ ] `notes-errors.md` con 3 errores que te hayan costado y su solución.
+
+### Día 5 (proyecto final)
+- [ ] Repo completo según la **ruta express** de `project/SPEC.md` (rúbrica en `01_plan_de_contenidos.md` §7).
 - [ ] Evidencia de un despliegue roto provocado + cómo lo resolviste.
-- [ ] Demo de 5 minutos.
+- [ ] Demo express (2 minutos).
 - [ ] Checklist de limpieza final (§6).
 
 **Formato mínimo de evidencia:** archivo `evidence.txt` con fecha, comando y salida (o captura PNG en la misma carpeta).
@@ -167,8 +178,9 @@ docker ps -a     # no deben quedar nodos kind
 
 ## 8. Continuidad (después del curso)
 
-1. **Consolidar:** repite el proyecto en un repo personal con otra app tuya.
-2. **Certificación:** ruta CKAD → CKA (Kubernetes official).
-3. **Nube:** mismo despliegue en AKS/EKS/GKE + IaC con Terraform/OpenTofu (curso siguiente).
-4. **GitOps:** automatiza con Flux o ArgoCD lo que hoy haces con `kubectl apply` desde CI.
-5. **Observabilidad:** añade Prometheus + Grafana sobre tu clúster local.
+1. **Material asíncrono:** completa `lab03-kubectl`, `lab09-kustomize`, la versión completa de `lab07-rollout` y los casos 3–4 de `lab12-debug`.
+2. **Consolidar:** repite el proyecto en un repo personal con otra app tuya.
+3. **Certificación:** ruta CKAD → CKA (Kubernetes official).
+4. **Nube:** mismo despliegue en AKS/EKS/GKE + IaC con Terraform/OpenTofu (curso siguiente).
+5. **GitOps:** automatiza con Flux o ArgoCD lo que hoy haces con `kubectl apply` desde CI.
+6. **Observabilidad:** añade Prometheus + Grafana sobre tu clúster local.

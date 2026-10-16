@@ -1,6 +1,6 @@
 # Lab 03 · kubectl: la brújula diaria
 
-**Módulo:** M04 · **Día:** 1 · **Duración:** 50 min (bloque de 1.5 h con teoría)
+**Módulo:** M04 · **Día:** 1 · **Duración:** 50 min · **Modalidad: ASÍNCRONO** (opcional; en aula la práctica de kubectl va dentro del lab04)
 **Guía:** alumno · **Carpeta:** `labs/lab03-kubectl/`
 
 ---

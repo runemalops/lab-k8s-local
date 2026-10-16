@@ -1,6 +1,6 @@
 # Lab 01 · Contenedores, imágenes y artefactos de deployment
 
-**Módulo:** M01 · **Día:** 1 · **Duración:** 25–30 min (bloque de 1 h con teoría)
+**Módulo:** M01 · **Día:** 1 · **Duración en aula:** 15 min (bloque D1 de 2 h)
 **Guía:** alumno · **Carpeta:** `labs/lab01-containers/`
 
 ---

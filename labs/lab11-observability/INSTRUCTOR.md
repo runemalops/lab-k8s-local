@@ -1,6 +1,6 @@
 # Guía del instructor · Lab 11 (M13)
 
-**Duración:** 30 min de lab (25 min de teoría antes) · **Carpeta:** `labs/lab11-observability/`
+**Duración:** 30 min de lab (Día 4; teoría M13 15 min antes) · **Carpeta:** `labs/lab11-observability/`
 **Mensaje del bloque:** *"diagnóstico > memorización."*
 
 ---

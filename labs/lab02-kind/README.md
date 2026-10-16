@@ -1,6 +1,6 @@
 # Lab 02 · Clúster local con kind
 
-**Módulo:** M03 · **Día:** 1 · **Duración:** 35 min (bloque de 1 h con teoría)
+**Módulo:** M03 · **Día:** 1 · **Duración en aula:** 15 min (bloque D1 de 2 h)
 **Guía:** alumno · **Carpeta:** `labs/lab02-kind/`
 
 ---

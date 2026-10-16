@@ -1,7 +1,7 @@
 # Estructura del curso — Lado del instructor
 
 **Curso:** Introducción a Kubernetes como herramienta de Deployment (entorno local)
-**Propósito:** playbook completo para preparar, dictar y cerrar el curso de 4 días.
+**Propósito:** playbook completo para preparar, dictar y cerrar el curso de **5 días × 2 h (10 h)**.
 
 ---
 
@@ -17,7 +17,8 @@
 | T-7 | Recoger respuestas del pre-test (arquitectura, YAML, Docker) y survey de hardware | ☐ |
 | T-5 | Preparar slides (`slides/`), cheat-sheets (`labs/lab03-kubectl/solution/cheatsheet.md`) e impresas y cuentas de Git del aula | ☐ |
 | T-3 | Recordario de instalación + prueba de verificación (`setup/verificacion.sh` y §4.4 de `01_plan`) | ☐ |
-| T-1 | Correr los 12 labs completos en la máquina demo; congelar versiones (kind, helm, imágenes) | ☐ |
+| T-1 | Correr los 10 labs del horario (lab01, lab02, lab04–lab08, lab10, lab11 y casos 1–2 de lab12) en la máquina demo; congelar versiones (kind, helm, imágenes) | ☐ |
+| T-1 | **Precargar el aula** (el formato comprimido no admite esperas): ingress-nginx instalado, imágenes base prebajeadas (`nginx:1.27`, `nginx:1.27.0`, `nginx:1.27.1`, `hashicorp/http-echo:1.0`) y `bash labs/lab10-cicd/ci.sh` en verde | ☐ |
 
 ### 1.2 Pre-test (enviar en T-7, 10 min)
 1. ¿Qué diferencia contenedor de una VM?
@@ -51,7 +52,7 @@ curso-k8s-local/
 ├── 03_estructura_instructor.md     # este archivo
 ├── 04_estructura_estudiante.md
 ├── slides/
-│   └── README.md                   # decks d1..d4 (los coloca el instructor)
+│   └── README.md                   # decks d1..d5 (los coloca el instructor)
 ├── labs/
 │   ├── lab01-containers/           # README.md (alumno) + INSTRUCTOR.md + skeleton + solution/
 │   ├── lab02-kind/                 # kind-config.yaml + solution/
@@ -95,48 +96,65 @@ curso-k8s-local/
 
 ---
 
-## 3. Rutina diaria (aplicar cada día)
+## 3. Rutina diaria (aplicar cada día — sesión de 2 h)
 
-| Momento | Acción | Tiempo |
+| Momento (relativo) | Acción | Tiempo |
 |---|---|---|
-| 09:00 | Warm-up: 3 preguntas del día anterior + quiz | 10 min |
-| 09:10 | Teoría con demo en vivo proyectada | bloques de 50–60 min |
-| cada bloque | Pausa de 10 min cada 90 min | — |
-| 14:00 | Lab guiado: el instructor demuestra el primer paso, luego los alumnos ejecutan | 2 h |
-| 16:00 | "Clinic": alumnos levantan la mano; el instructor rota priorizando bloqueos >10 min | 45 min |
-| 16:45 | Retro: qué salió, qué duele, qué viene; checklist de limpieza | 15 min |
+| 0:00 | Warm-up: 3 preguntas del día anterior + quiz de 5 preguntas | 5 min |
+| 0:05 | Teoría esencial con demo en vivo proyectada (1 o 2 bloques cortos) | 15–35 min |
+| 0:20–1:50 | Lab guiado: el instructor demuestra el primer paso, luego los alumnos ejecutan | 60–75 min |
+| en el lab | "Clinic": levantar la mano; priorizar bloqueos >5 min (2 h no perdona) | rotativo |
+| 1:50 | Retro: qué salió, qué duele, qué viene; **checklist de limpieza** | 10 min |
+
+> **Disciplina de 2 h:** el instructor tiene la pizarra de tiempos visible y corta en seco
+> cualquier bloque que se pase de 2 min. Lo que no cabe → material asíncrono, no "minutos extra".
 
 **Reglas de aula del instructor:**
-1. Nunca entregar el YAML final resuelto antes de que el alumno intente (mín. 15 min de esfuerzo).
+1. Nunca entregar el YAML final resuelto antes de que el alumno intente (mín. 5 min de esfuerzo en este formato).
 2. Bloqueos frecuentes → pausar y hacer demo grupal (mínimo 3 alumnos con el mismo error).
 3. Todo error repetido se documenta en la "Pizarra de errores" (slides del día siguiente).
 4. El instructor ejecuta la limpieza en su máquina al final de cada sesión (ejemplo visible).
+5. Ninguna sesión se cierra con recursos sin borrar: limpieza obligatoria en los últimos 5 min.
 
 ---
 
 ## 4. Guía de enseñanza por día (qué enfatizar)
 
-### Día 1 — "El cluster es una máquina de estados"
+### Día 1 — "De la imagen al despliegue en 2 horas"
 - Enfatizar: **desired state**; si no está en el YAML, no existe.
 - Demo clave: borrar un pod manualmente y ver cómo el Deployment lo recrea.
+- Ritmo: es el día más cargado. Si se atrasa >5 min, recorta la parte de alternativas de kind
+  (el lab03 de kubectl es material asíncrono y sobra en aula).
 - Cuidado: no profundizar en control plane interno (fuera de alcance).
-- Salida esperada: todos los alumnos con `kubectl get all` mostrando su nginx.
+- Salida esperada: todos con `kubectl get all -n lab04` mostrando su nginx y limpieza ejecutada.
 
 ### Día 2 — "Deployment es un proceso, no un comando"
 - Enfatizar: config externa, versionado de imágenes, rollback como skill obligatoria.
 - Demo clave: rollout fallido → bloqueo → `rollout undo` en <30 s.
+- Aviso: ingress-nginx **ya instalado** y lab06 en 20 min; si se atrasa, deja `lab07` completo
+  (probes/OOMKilled) como asíncrono — en aula solo rollout + undo.
 - Salida esperada: cada alumno con evidencia de rollback.
 
-### Día 3 — "Lo que no está automatizado, no existe"
+### Día 3 — "Lo que no está paquetizado, no se reproduce"
 - Enfatizar: repetibilidad (mismos comandos, mismo resultado) y separación de entornos.
-- Demo clave: mismo chart desplegado con `--set` distinto y luego con overlays.
-- Salida esperada: pipeline verde al menos una vez por pareja.
-- Riesgo: pipeline CI/CD es el bloque más frágil → tener **fallback offline** (pipeline local con `act` o ejecución paso a paso en terminal documentada).
+- Demo clave: mismo chart desplegado con `--set` distinto y luego con `values-*.yaml`.
+- Kustomize: solo comparación de 5 min en el cierre (lab09 es asíncrono).
+- Salida esperada: chart con 2 archivos de values y rollback documentado.
 
-### Día 4 — "Diagnóstico > memorización"
-- Enfatizar: flujo `get → describe → events → logs`.
-- Demo clave: CrashLoopBackOff resuelto en vivo sin tocar el teclado de los alumnos.
-- Cierre: conectar con el ecosistema (nube, IaC, GitOps) sin abrir nuevo contenido.
+### Día 4 — "Automatiza y diagnostica"
+- Enfatizar: pipeline que valida antes de desplegar; flujo `get → describe → events → logs`.
+- Demo clave: CrashLoopBackOff resuelto en vivo + mini-demo GitOps (5 min).
+- Riesgo: pipeline CI/CD es el bloque más frágil → **fallback offline** siempre disponible
+  (`bash labs/lab10-cicd/ci.sh`).
+- Salida esperada: pipeline verde + rojo por alumno/pareja y `guia-diagnostico.md`.
+
+### Día 5 — "Seguridad, producción y entrega"
+- Enfatizar: RBAC mínimo, secretos bien tratados, imágenes etiquetadas y no-root.
+- Demo clave: `kubectl auth can-i` sí/no con ServiceAccount acotado.
+- "De local a producción": 10 min, sin abrir contenido nuevo (es cierre, no módulo).
+- Proyecto: 50 min con `project/starter/` y ruta express; si un equipo no termina, los
+  últimos 10 min se usan igual para demos + rúbrica + limpieza final (entrega diferida a 48 h).
+- Salida esperada: proyecto entregado + clúster destruido en la sala.
 
 ---
 
@@ -145,32 +163,33 @@ curso-k8s-local/
 ### 5.1 Instrumentos y momentos
 | Qué | Cuándo | Cómo calificar |
 |---|---|---|
-| Quiz diario (5 preguntas) | Fin de cada mañana | Autocheck en aula, 1 pt c/u |
-| Entregables D1–D3 | Fin de día, repo del alumno | Checklist de 5 puntos por entregable |
-| Proyecto final | Día 4 | Rúbrica §7 del plan (40 pts) + demo 5 min |
+| Quiz diario (5 preguntas) | Inicio de cada día (5 min) | Autocheck en aula, 1 pt c/u |
+| Entregables D1–D4 | Cierre de cada día, repo del alumno | Checklist de 5 puntos por entregable |
+| Proyecto final | Día 5 (50 min en aula + entrega diferida 48 h) | Rúbrica §5.3 del plan (40 pts) + demo express 2 min |
 | Participación | Continuo | Registro del instructor (intervenciones útiles, ayuda a pares) |
 
-### 5.2 Checklist de entregable genérico (usar en D1–D3)
+### 5.2 Checklist de entregable genérico (usar en D1–D4)
 - [ ] Archivos en el repo con nombres correctos.
 - [ ] Manifiestos validados (`kubectl apply --dry-run=client` / `helm lint`).
 - [ ] Evidencia incluida (salida de comando en archivo `evidence.txt` o captura).
 - [ ] Funciona en clúster recreado desde cero (prueba de reproducibilidad).
 - [ ] Limpieza ejecutada (namespaces borrados).
 
-### 5.3 Rúbrica del proyecto final (40 pts)
+### 5.3 Rúbrica del proyecto final (40 pts) — ruta express
 | Criterio | Pts | Indicador de 10/10 |
 |---|---|---|
 | Manifiestos y arquitectura | 10 | 2 servicios con labels correctos, YAML validado, sin valores hardcodeados |
-| Empaquetado multi-entorno | 10 | Base + 2 entornos funcionales; cambiar de entorno no toca la base |
-| CI/CD | 8 | Pipeline valida y despliega; falla ante manifiesto inválido |
-| Exposición/escalado | 6 | Ingress/Service probado + recurso de escalado o réplicas configuradas |
-| Docs, higiene y limpieza | 6 | README reproducible + limpieza ejecutada |
+| Empaquetado multi-entorno (Helm) | 10 | Chart con `values-dev` + `values-staging`; cambiar de entorno no toca el chart |
+| Config/secretos y exposición | 8 | ConfigMap + Secret usados, Ingress o Service probado y documentado |
+| Rollback e higiene/limpieza | 6 | Evidencia de rollback + `requests/limits` + limpieza ejecutada |
+| Docs y reproducibilidad | 6 | README que permite desplegar en <15 min desde `kind create cluster` |
 
 **Umbrales:** ≥32 pts = aprobado · ≥36 = destacado · <28 = recuperación (reespecífico del lab más débil).
 
 ### 5.4 Recuperación
-- Alumno que falla en 1 entregable → lab extra guiado (30 min, día siguiente por la mañana).
-- Alumno que falla el proyecto → entrega diferida a 48 h con la misma rúbrica.
+- Alumno que falla en 1 entregable → lab extra guiado (20 min, al inicio del día siguiente o asíncrono).
+- Alumno que no termina el proyecto en los 50 min → entrega diferida a 48 h con la misma rúbrica.
+- Alumno que falla el proyecto → reentrega con feedback; el material asíncrono (lab09/lab03) suma como extra.
 
 ---
 

@@ -1,6 +1,6 @@
 # Guía del instructor · Lab 06 (M08)
 
-**Duración:** 45 min de lab (40 min de teoría antes) · **Carpeta:** `labs/lab06-ingress/`
+**Duración:** 20 min de lab (Día 2; teoría M08 15 min antes; **ingress-nginx ya instalado desde T-1**) · **Carpeta:** `labs/lab06-ingress/`
 **Mensaje del bloque:** *"dentro del clúster hay DNS; fuera hace falta una puerta."*
 
 ---

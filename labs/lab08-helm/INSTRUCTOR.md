@@ -1,6 +1,6 @@
 # Guía del instructor · Lab 08 (M10)
 
-**Duración:** 60 min (manejo básico) + 50 min (plantillas y entornos) · **Carpeta:** `labs/lab08-helm/`
+**Duración:** 75 min de lab en el bloque D3 (40 min chart + 35 min values/rollback) · **Carpeta:** `labs/lab08-helm/`
 **Mensaje del bloque:** *"empaquetar es decidir qué es configurable y qué no."*
 
 ---
@@ -71,5 +71,5 @@ Respuesta esperada: editar `values-staging.yaml` y `helm upgrade`.
 
 ## 9. Conexión con el proyecto
 
-Requisito 2 del proyecto: "empaquetado con Helm o Kustomize parametrizable en dev y
-staging". Este lab entrega ese 60 % del requisito; Kustomize (lab 09) es la alternativa.
+Requisito 2 del proyecto: "empaquetado con Helm con `values-dev` y `values-staging`".
+Este lab entrega ese requisito completo; Kustomize (lab 09) es la alternativa **asíncrona**.
